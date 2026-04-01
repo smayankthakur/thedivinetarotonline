@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server'
 import { createClient } from '@/lib/supabase/server'
 import { getRandomCards } from '@/lib/tarot/cards'
+import { getSpreadById } from '@/lib/tarot/spreads'
 
 export async function POST(request: Request) {
   try {
@@ -19,7 +20,7 @@ export async function POST(request: Request) {
     }
 
     const body = await request.json()
-    const { question } = body
+    const { question, spreadId = 'three-card' } = body
 
     if (!question || typeof question !== 'string' || question.trim().length === 0) {
       return NextResponse.json(
@@ -28,11 +29,20 @@ export async function POST(request: Request) {
       )
     }
 
-    // Draw 3 random cards
-    const cards = getRandomCards(3)
+    // Get spread configuration
+    const spread = getSpreadById(spreadId)
+    if (!spread) {
+      return NextResponse.json(
+        { error: 'Invalid spread type' },
+        { status: 400 }
+      )
+    }
 
-    // Generate interpretation based on cards
-    const interpretation = generateInterpretation(cards, question)
+    // Draw cards based on spread type
+    const cards = getRandomCards(spread.cardCount)
+
+    // Generate interpretation based on spread type
+    const interpretation = generateInterpretation(cards, question, spread)
 
     // Store reading in database
     const { data: reading, error: dbError } = await supabase
@@ -40,7 +50,8 @@ export async function POST(request: Request) {
       .insert({
         user_id: user.id,
         question: question.trim(),
-        cards: cards.map((card) => ({
+        spread_type: spreadId,
+        cards: cards.map((card, index) => ({
           id: card.id,
           name: card.name,
           suit: card.suit,
@@ -49,6 +60,8 @@ export async function POST(request: Request) {
           description: card.description,
           keywords: card.keywords,
           image: card.image,
+          position: spread.positions[index]?.name || `Position ${index + 1}`,
+          positionMeaning: spread.positions[index]?.meaning || '',
         })),
         interpretation,
         created_at: new Date().toISOString(),
@@ -64,8 +77,13 @@ export async function POST(request: Request) {
     return NextResponse.json({
       success: true,
       data: {
-        cards,
+        cards: cards.map((card, index) => ({
+          ...card,
+          position: spread.positions[index]?.name || `Position ${index + 1}`,
+          positionMeaning: spread.positions[index]?.meaning || '',
+        })),
         interpretation,
+        spread,
         readingId: reading?.id,
       },
     })
@@ -78,16 +96,86 @@ export async function POST(request: Request) {
   }
 }
 
-function generateInterpretation(cards: any[], question: string): string {
+function generateInterpretation(cards: any[], question: string, spread: any): string {
   const cardNames = cards.map((c) => c.name).join(', ')
   
-  const interpretations = [
-    `The cards reveal a powerful message about your question: "${question}". The ${cards[0].name} in the first position suggests ${cards[0].meaning.toLowerCase()}. This is complemented by the ${cards[1].name}, which indicates ${cards[1].meaning.toLowerCase()}. Finally, the ${cards[2].name} brings ${cards[2].meaning.toLowerCase()}. Together, these cards suggest that you are on the right path. Trust your intuition and embrace the journey ahead.`,
-    
-    `Your reading shows a clear path forward. The ${cards[0].name} represents ${cards[0].keywords[0]} and ${cards[0].keywords[1]}, suggesting that ${cards[0].description.toLowerCase()}. The ${cards[1].name} in the second position speaks to ${cards[1].keywords[0]} and ${cards[1].keywords[2]}, reminding you that ${cards[1].description.toLowerCase()}. The ${cards[2].name} concludes your reading with ${cards[2].keywords[0]} and ${cards[2].keywords[1]}, indicating that ${cards[2].description.toLowerCase()}.`,
-    
-    `The universe has spoken through the cards. The ${cards[0].name} appears to guide you toward ${cards[0].keywords[0]}. This is followed by the ${cards[1].name}, which emphasizes ${cards[1].keywords[1]} and ${cards[1].keywords[2]}. The ${cards[2].name} completes your reading, bringing ${cards[2].keywords[0]} and ${cards[2].keywords[3]}. These cards together suggest that your question about "${question}" is being answered through ${cards[0].keywords[0]}, ${cards[1].keywords[0]}, and ${cards[2].keywords[0]}.`,
-  ]
+  if (spread.id === 'single-card') {
+    return generateSingleCardInterpretation(cards[0], question)
+  } else if (spread.id === 'three-card') {
+    return generateThreeCardInterpretation(cards, question)
+  } else if (spread.id === 'celtic-cross') {
+    return generateCelticCrossInterpretation(cards, question)
+  }
+  
+  return generateGenericInterpretation(cards, question, spread)
+}
 
-  return interpretations[Math.floor(Math.random() * interpretations.length)]
+function generateSingleCardInterpretation(card: any, question: string): string {
+  return `The card drawn for your question "${question}" is **${card.name}**.
+
+**Core Message:** ${card.meaning}
+
+**Detailed Insight:** ${card.description}
+
+**Key Themes:** ${card.keywords.join(', ')}
+
+This single card represents the essence of your situation. Focus on its message and how it relates to your question. The ${card.name} suggests that you are in a phase of ${card.keywords[0]} and ${card.keywords[1]}. Trust your intuition as you reflect on this guidance.`
+}
+
+function generateThreeCardInterpretation(cards: any[], question: string): string {
+  const [past, present, future] = cards
+  
+  return `Your three-card reading for "${question}" reveals a powerful timeline:
+
+**Past - ${past.name}:** ${past.meaning}
+${past.description}
+
+**Present - ${present.name}:** ${present.meaning}
+${present.description}
+
+**Future - ${future.name}:** ${future.meaning}
+${future.description}
+
+**Overall Guidance:** The cards show a journey from ${past.keywords[0]} through ${present.keywords[0]} toward ${future.keywords[0]}. Your past experiences with ${past.keywords[1]} have shaped your current situation of ${present.keywords[1]}. The future holds promise of ${future.keywords[1]} if you continue on your current path. Trust the process and embrace the transformation ahead.`
+}
+
+function generateCelticCrossInterpretation(cards: any[], question: string): string {
+  const positions = [
+    'Present Situation',
+    'Challenge',
+    'Subconscious',
+    'Recent Past',
+    'Conscious',
+    'Near Future',
+    'Your Approach',
+    'External Influences',
+    'Hopes & Fears',
+    'Final Outcome',
+  ]
+  
+  let interpretation = `Your Celtic Cross reading for "${question}" provides deep insight into your situation:\n\n`
+  
+  cards.forEach((card, index) => {
+    interpretation += `**${positions[index]} - ${card.name}:** ${card.meaning}\n`
+    interpretation += `${card.description}\n\n`
+  })
+  
+  interpretation += `**Overall Summary:** This comprehensive reading reveals that you are in a phase of ${cards[0].keywords[0]} and ${cards[0].keywords[1]}. The main challenge involves ${cards[1].keywords[0]}, while your subconscious is focused on ${cards[2].keywords[0]}. Recent events have brought ${cards[3].keywords[0]} into your life. Your hopes center around ${cards[4].keywords[0]}, and the near future suggests ${cards[5].keywords[0]}. Your approach of ${cards[6].keywords[0]} is influenced by ${cards[7].keywords[0]}. Your hopes and fears revolve around ${cards[8].keywords[0]}, and the final outcome points to ${cards[9].keywords[0]}. Trust your journey and embrace the guidance offered by the cards.`
+  
+  return interpretation
+}
+
+function generateGenericInterpretation(cards: any[], question: string, spread: any): string {
+  let interpretation = `Your ${spread.name} reading for "${question}" reveals:\n\n`
+  
+  cards.forEach((card, index) => {
+    const position = spread.positions[index]?.name || `Position ${index + 1}`
+    interpretation += `**${position} - ${card.name}:** ${card.meaning}\n`
+    interpretation += `${card.description}\n\n`
+  })
+  
+  interpretation += `**Overall Guidance:** The cards suggest a theme of ${cards[0].keywords[0]} and ${cards[0].keywords[1]}. `
+  interpretation += `Trust your intuition as you navigate this journey. The universe is guiding you toward positive transformation.`
+  
+  return interpretation
 }

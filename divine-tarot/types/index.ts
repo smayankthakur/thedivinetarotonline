@@ -10,6 +10,24 @@ export interface User {
   updatedAt: string
 }
 
+// User Profile types for personalization engine
+export interface UserProfile {
+  id: string
+  userId: string
+  totalReadings: number
+  dominantSuits: {
+    major?: number
+    wands?: number
+    cups?: number
+    swords?: number
+    pentacles?: number
+  }
+  energyPatterns: string[]
+  lastReadingAt: string | null
+  createdAt: string
+  updatedAt: string
+}
+
 // Reading types
 export interface Reading {
   id: string

@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server'
 import { createClient } from '@/lib/supabase/server'
 import { config } from '@/lib/config'
+import { getSpreadById } from '@/lib/tarot/spreads'
 
 export async function POST(request: Request) {
   try {
@@ -19,7 +20,7 @@ export async function POST(request: Request) {
     }
 
     const body = await request.json()
-    const { user_question, selected_cards } = body
+    const { user_question, selected_cards, spread_id = 'three-card' } = body
 
     // Validate input
     if (!user_question || typeof user_question !== 'string' || user_question.trim().length === 0) {
@@ -44,34 +45,122 @@ export async function POST(request: Request) {
       )
     }
 
+    // Get spread configuration
+    const spread = getSpreadById(spread_id)
+    if (!spread) {
+      return NextResponse.json(
+        { error: 'Invalid spread type' },
+        { status: 400 }
+      )
+    }
+
+    // Fetch user's last 5 readings for context
+    const { data: recentReadings } = await supabase
+      .from('readings')
+      .select('question, cards, interpretation, created_at, spread_type')
+      .eq('user_id', user.id)
+      .order('created_at', { ascending: false })
+      .limit(5)
+
+    // Fetch or create user profile
+    let { data: userProfile } = await supabase
+      .from('user_profiles')
+      .select('*')
+      .eq('user_id', user.id)
+      .single()
+
+    if (!userProfile) {
+      // Create new user profile
+      const { data: newProfile } = await supabase
+        .from('user_profiles')
+        .insert({
+          user_id: user.id,
+          total_readings: 0,
+          dominant_suits: {},
+          energy_patterns: [],
+          last_reading_at: null,
+        })
+        .select()
+        .single()
+      userProfile = newProfile
+    }
+
     // Create streaming response
     const encoder = new TextEncoder()
     const stream = new ReadableStream({
       async start(controller) {
         try {
-          // Prepare card information for prompt
+          // Prepare card information for prompt with positions
           const cardsInfo = selected_cards.map((card: any, index: number) => {
+            const position = spread.positions[index]
             return `Card ${index + 1}: ${card.name} (${card.suit})
+Position: ${position?.name || `Position ${index + 1}`} - ${position?.meaning || ''}
 - Meaning: ${card.meaning}
 - Reversed Meaning: ${card.reversedMeaning}
 - Description: ${card.description}
 - Keywords: ${card.keywords.join(', ')}`
           }).join('\n\n')
 
-          // Create the prompt
-          const prompt = `You are a mystical tarot reader with deep spiritual insight. Interpret the following tarot cards in relation to the user's question.
+          // Prepare recent readings context
+          let recentContext = ''
+          if (recentReadings && recentReadings.length > 0) {
+            recentContext = `\n\nUser's Recent Reading History (for context and continuity):
+${recentReadings.map((reading, index) => {
+  const cards = reading.cards.map((c: any) => c.name).join(', ')
+  return `${index + 1}. Question: "${reading.question}"
+   Spread: ${reading.spread_type || 'three-card'}
+   Cards: ${cards}
+   Date: ${new Date(reading.created_at).toLocaleDateString()}`
+}).join('\n\n')}
+
+Note: Use this history to provide personalized, continuous guidance. Reference past themes and patterns when relevant.`
+          }
+
+          // Prepare energy patterns context
+          let energyContext = ''
+          if (userProfile?.energy_patterns && userProfile.energy_patterns.length > 0) {
+            energyContext = `\n\nUser's Energy Patterns:
+${userProfile.energy_patterns.join(', ')}`
+          }
+
+          // Create spread-specific instructions
+          let spreadInstructions = ''
+          if (spread.id === 'single-card') {
+            spreadInstructions = `
+This is a SINGLE CARD reading. Focus on the core message of this one card. Be concise and direct.`
+          } else if (spread.id === 'three-card') {
+            spreadInstructions = `
+This is a THREE CARD reading (Past/Present/Future). Interpret each card in its position and show the timeline progression.`
+          } else if (spread.id === 'celtic-cross') {
+            spreadInstructions = `
+This is a CELTIC CROSS reading (10 cards). Provide a comprehensive analysis covering all aspects of the situation. Be thorough and detailed.`
+          }
+
+          // Create the enhanced prompt with personalization and spread awareness
+          const prompt = `You are a mystical tarot reader with deep spiritual insight and perfect memory of past readings. You provide compassionate, insightful, and practical guidance based on tarot cards.
 
 User's Question: "${user_question}"
 
-Selected Cards:
+Spread Type: ${spread.name} (${spread.cardCount} cards)
+${spread.description}
+${spreadInstructions}
+
+Selected Cards with Positions:
 ${cardsInfo}
+${recentContext}
+${energyContext}
 
-Provide a deep, mystical interpretation that includes:
-1. Emotional Insight: What emotions and feelings the cards reveal about the situation
-2. Practical Advice: Actionable guidance for the user's current circumstances
-3. Future Guidance: What the cards suggest about potential outcomes and paths forward
+Provide a deeply personal and continuous interpretation that includes:
 
-Be mystical, insightful, and compassionate. Use spiritual language while remaining grounded and practical.
+1. **Emotional Insight**: What emotions and feelings the cards reveal about the situation. Reference past patterns if relevant.
+
+2. **Practical Advice**: Actionable guidance for the user's current circumstances. Connect to their journey.
+
+3. **Energy Reading**: The spiritual energy surrounding this question. Note any shifts from past readings.
+
+4. **Future Guidance**: What the cards suggest about potential outcomes and paths forward. Build on progress.
+
+Be mystical, insightful, and compassionate. Use spiritual language while remaining grounded and practical. Make the reading feel like a continuous conversation with a trusted spiritual advisor who remembers everything.
 
 Respond in a structured format with clear sections for each aspect.`
 
@@ -83,11 +172,11 @@ Respond in a structured format with clear sections for each aspect.`
               'Authorization': `Bearer ${config.ai.openaiApiKey}`,
             },
             body: JSON.stringify({
-              model: 'gpt-4o-mini', // Using mini for cost optimization
+              model: 'gpt-4o-mini',
               messages: [
                 {
                   role: 'system',
-                  content: 'You are a mystical tarot reader with deep spiritual insight. You provide compassionate, insightful, and practical guidance based on tarot cards. Your readings are mystical yet grounded, offering both emotional depth and actionable advice.',
+                  content: 'You are a mystical tarot reader with deep spiritual insight and perfect memory. You provide compassionate, insightful, and practical guidance. Your readings are mystical yet grounded, offering both emotional depth and actionable advice. You remember past readings and provide continuous, personalized guidance.',
                 },
                 {
                   role: 'user',
@@ -95,8 +184,8 @@ Respond in a structured format with clear sections for each aspect.`
                 },
               ],
               stream: true,
-              max_tokens: 1000,
-              temperature: 0.8, // Slightly creative but not too random
+              max_tokens: spread.id === 'celtic-cross' ? 2000 : 1500,
+              temperature: 0.8,
             }),
           })
 
@@ -146,12 +235,28 @@ Respond in a structured format with clear sections for each aspect.`
           // Parse the full content to extract structured data
           const interpretation = parseInterpretation(fullContent)
 
+          // Extract energy patterns from the reading
+          const energyPatterns = extractEnergyPatterns(fullContent, selected_cards)
+
+          // Update user profile with new data
+          await supabase
+            .from('user_profiles')
+            .update({
+              total_readings: (userProfile?.total_readings || 0) + 1,
+              dominant_suits: updateDominantSuits(userProfile?.dominant_suits || {}, selected_cards),
+              energy_patterns: energyPatterns,
+              last_reading_at: new Date().toISOString(),
+            })
+            .eq('user_id', user.id)
+
           // Send final structured response
           controller.enqueue(
             encoder.encode(
               `data: ${JSON.stringify({
                 done: true,
                 interpretation,
+                energyPatterns,
+                spread,
               })}\n\n`
             )
           )
@@ -194,7 +299,6 @@ function parseInterpretation(content: string): {
   energy: string
   outcome: string
 } {
-  // Default structure
   const interpretation = {
     summary: '',
     advice: '',
@@ -202,7 +306,6 @@ function parseInterpretation(content: string): {
     outcome: '',
   }
 
-  // Try to extract sections from the content
   const lines = content.split('\n')
   let currentSection = ''
 
@@ -215,15 +318,14 @@ function parseInterpretation(content: string): {
     } else if (lowerLine.includes('practical advice') || lowerLine.includes('advice')) {
       currentSection = 'advice'
       continue
+    } else if (lowerLine.includes('energy reading') || lowerLine.includes('energy')) {
+      currentSection = 'energy'
+      continue
     } else if (lowerLine.includes('future guidance') || lowerLine.includes('outcome')) {
       currentSection = 'outcome'
       continue
-    } else if (lowerLine.includes('energy') || lowerLine.includes('spiritual')) {
-      currentSection = 'energy'
-      continue
     }
 
-    // Add content to current section
     if (currentSection && line.trim()) {
       interpretation[currentSection as keyof typeof interpretation] += line + '\n'
     }
@@ -231,19 +333,69 @@ function parseInterpretation(content: string): {
 
   // If parsing didn't work well, use the full content
   if (!interpretation.summary && !interpretation.advice) {
-    interpretation.summary = content.substring(0, 300)
-    interpretation.advice = content.substring(300, 600)
+    interpretation.summary = content.substring(0, 400)
+    interpretation.advice = content.substring(400, 800)
     interpretation.energy = 'The cards carry a powerful spiritual energy that resonates with your current situation.'
-    interpretation.outcome = content.substring(600, 900) || 'The universe guides you toward positive transformation.'
+    interpretation.outcome = content.substring(800, 1200) || 'The universe guides you toward positive transformation.'
   }
 
   // Clean up the extracted text
   Object.keys(interpretation).forEach((key) => {
     interpretation[key as keyof typeof interpretation] = interpretation[key as keyof typeof interpretation]
       .trim()
-      .replace(/^\d+\.\s*/, '') // Remove numbering
-      .replace(/^[-*]\s*/, '') // Remove bullet points
+      .replace(/^\d+\.\s*/, '')
+      .replace(/^[-*]\s*/, '')
   })
 
   return interpretation
+}
+
+function extractEnergyPatterns(content: string, cards: any[]): string[] {
+  const patterns: string[] = []
+  
+  // Extract patterns from card suits
+  const suits = cards.map(card => card.suit)
+  const suitCounts: { [key: string]: number } = {}
+  
+  suits.forEach(suit => {
+    suitCounts[suit] = (suitCounts[suit] || 0) + 1
+  })
+  
+  // Add dominant suit patterns
+  Object.entries(suitCounts).forEach(([suit, count]) => {
+    if (count >= 2) {
+      patterns.push(`${suit}-dominant`)
+    }
+  })
+  
+  // Extract patterns from content
+  const lowerContent = content.toLowerCase()
+  
+  if (lowerContent.includes('transformation') || lowerContent.includes('change')) {
+    patterns.push('transformation-phase')
+  }
+  if (lowerContent.includes('growth') || lowerContent.includes('expansion')) {
+    patterns.push('growth-energy')
+  }
+  if (lowerContent.includes('challenge') || lowerContent.includes('obstacle')) {
+    patterns.push('challenge-period')
+  }
+  if (lowerContent.includes('harmony') || lowerContent.includes('balance')) {
+    patterns.push('harmony-seeking')
+  }
+  if (lowerContent.includes('manifestation') || lowerContent.includes('creation')) {
+    patterns.push('manifestation-power')
+  }
+  
+  return patterns.slice(0, 5) // Keep only last 5 patterns
+}
+
+function updateDominantSuits(current: { [key: string]: number }, cards: any[]): { [key: string]: number } {
+  const updated = { ...current }
+  
+  cards.forEach(card => {
+    updated[card.suit] = (updated[card.suit] || 0) + 1
+  })
+  
+  return updated
 }
