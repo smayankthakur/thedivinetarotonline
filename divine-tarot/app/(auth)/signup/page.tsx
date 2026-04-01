@@ -6,18 +6,35 @@ import { useRouter } from 'next/navigation'
 import { Button } from '@/components/ui/button'
 import { useAuth } from '@/hooks/useAuth'
 
-export default function LoginPage() {
+export default function SignUpPage() {
   const router = useRouter()
-  const { signIn, signInWithGoogle, signInWithGitHub, user, loading: authLoading, error: authError, clearError } = useAuth()
+  const { signUp, signInWithGoogle, signInWithGitHub, user, loading: authLoading, error: authError, clearError } = useAuth()
   
-  const [email, setEmail] = useState('')
-  const [password, setPassword] = useState('')
+  const [formData, setFormData] = useState({
+    name: '',
+    email: '',
+    password: '',
+    confirmPassword: '',
+  })
   const [loading, setLoading] = useState(false)
-  const [errors, setErrors] = useState<{ email?: string; password?: string }>({})
-  const [touched, setTouched] = useState<{ email: boolean; password: boolean }>({
+  const [errors, setErrors] = useState<{
+    name?: string
+    email?: string
+    password?: string
+    confirmPassword?: string
+  }>({})
+  const [touched, setTouched] = useState<{
+    name: boolean
+    email: boolean
+    password: boolean
+    confirmPassword: boolean
+  }>({
+    name: false,
     email: false,
     password: false,
+    confirmPassword: false,
   })
+  const [success, setSuccess] = useState(false)
 
   // Redirect if already logged in
   useEffect(() => {
@@ -34,10 +51,23 @@ export default function LoginPage() {
   }, [clearError])
 
   useEffect(() => {
-    if (email || password) {
+    if (formData.name || formData.email || formData.password || formData.confirmPassword) {
       clearError()
     }
-  }, [email, password, clearError])
+  }, [formData, clearError])
+
+  const validateName = (name: string): string | undefined => {
+    if (!name) {
+      return 'Name is required'
+    }
+    if (name.trim().length < 2) {
+      return 'Name must be at least 2 characters'
+    }
+    if (name.trim().length > 50) {
+      return 'Name must be less than 50 characters'
+    }
+    return undefined
+  }
 
   const validateEmail = (email: string): string | undefined => {
     if (!email) {
@@ -57,36 +87,114 @@ export default function LoginPage() {
     if (password.length < 6) {
       return 'Password must be at least 6 characters'
     }
+    if (password.length > 72) {
+      return 'Password must be less than 72 characters'
+    }
+    if (!/[A-Z]/.test(password)) {
+      return 'Password must contain at least one uppercase letter'
+    }
+    if (!/[a-z]/.test(password)) {
+      return 'Password must contain at least one lowercase letter'
+    }
+    if (!/[0-9]/.test(password)) {
+      return 'Password must contain at least one number'
+    }
     return undefined
   }
 
-  const handleBlur = (field: 'email' | 'password') => {
+  const validateConfirmPassword = (confirmPassword: string): string | undefined => {
+    if (!confirmPassword) {
+      return 'Please confirm your password'
+    }
+    if (confirmPassword !== formData.password) {
+      return 'Passwords do not match'
+    }
+    return undefined
+  }
+
+  const handleBlur = (field: keyof typeof touched) => {
     setTouched((prev) => ({ ...prev, [field]: true }))
     
-    if (field === 'email') {
-      const error = validateEmail(email)
-      setErrors((prev) => ({ ...prev, email: error }))
-    } else if (field === 'password') {
-      const error = validatePassword(password)
-      setErrors((prev) => ({ ...prev, password: error }))
+    switch (field) {
+      case 'name':
+        setErrors((prev) => ({ ...prev, name: validateName(formData.name) }))
+        break
+      case 'email':
+        setErrors((prev) => ({ ...prev, email: validateEmail(formData.email) }))
+        break
+      case 'password':
+        setErrors((prev) => ({ ...prev, password: validatePassword(formData.password) }))
+        // Also validate confirm password if it's been touched
+        if (touched.confirmPassword) {
+          setErrors((prev) => ({
+            ...prev,
+            confirmPassword: validateConfirmPassword(formData.confirmPassword),
+          }))
+        }
+        break
+      case 'confirmPassword':
+        setErrors((prev) => ({
+          ...prev,
+          confirmPassword: validateConfirmPassword(formData.confirmPassword),
+        }))
+        break
     }
   }
 
   const validateForm = (): boolean => {
-    const emailError = validateEmail(email)
-    const passwordError = validatePassword(password)
+    const nameError = validateName(formData.name)
+    const emailError = validateEmail(formData.email)
+    const passwordError = validatePassword(formData.password)
+    const confirmPasswordError = validateConfirmPassword(formData.confirmPassword)
     
     setErrors({
+      name: nameError,
       email: emailError,
       password: passwordError,
+      confirmPassword: confirmPasswordError,
     })
     
     setTouched({
+      name: true,
       email: true,
       password: true,
+      confirmPassword: true,
     })
     
-    return !emailError && !passwordError
+    return !nameError && !emailError && !passwordError && !confirmPasswordError
+  }
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target
+    setFormData((prev) => ({ ...prev, [name]: value }))
+    
+    // Validate on change if field has been touched
+    if (touched[name as keyof typeof touched]) {
+      switch (name) {
+        case 'name':
+          setErrors((prev) => ({ ...prev, name: validateName(value) }))
+          break
+        case 'email':
+          setErrors((prev) => ({ ...prev, email: validateEmail(value) }))
+          break
+        case 'password':
+          setErrors((prev) => ({ ...prev, password: validatePassword(value) }))
+          // Also validate confirm password
+          if (touched.confirmPassword) {
+            setErrors((prev) => ({
+              ...prev,
+              confirmPassword: validateConfirmPassword(formData.confirmPassword),
+            }))
+          }
+          break
+        case 'confirmPassword':
+          setErrors((prev) => ({
+            ...prev,
+            confirmPassword: validateConfirmPassword(value),
+          }))
+          break
+      }
+    }
   }
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -99,14 +207,17 @@ export default function LoginPage() {
     setLoading(true)
     
     try {
-      const { error } = await signIn(email, password)
+      const { error } = await signUp(
+        formData.email,
+        formData.password,
+        formData.name
+      )
       
       if (!error) {
-        router.push('/overview')
-        router.refresh()
+        setSuccess(true)
       }
     } catch (err) {
-      console.error('Login error:', err)
+      console.error('Sign up error:', err)
     } finally {
       setLoading(false)
     }
@@ -155,13 +266,44 @@ export default function LoginPage() {
     return null // Will redirect via useEffect
   }
 
+  if (success) {
+    return (
+      <div className="container flex items-center justify-center min-h-[calc(100vh-8rem)] py-12">
+        <div className="w-full max-w-md space-y-8 text-center">
+          <div className="space-y-4">
+            <div className="text-6xl mb-4">✉️</div>
+            <h1 className="text-3xl font-bold font-serif">Check Your Email</h1>
+            <p className="text-muted-foreground">
+              We've sent a verification link to <strong>{formData.email}</strong>.
+              Please check your inbox and click the link to verify your account.
+            </p>
+          </div>
+          <div className="space-y-4">
+            <p className="text-sm text-muted-foreground">
+              Didn't receive the email? Check your spam folder or{' '}
+              <button
+                onClick={() => setSuccess(false)}
+                className="text-primary hover:underline"
+              >
+                try again
+              </button>
+            </p>
+            <Button asChild variant="outline">
+              <Link href="/login">Back to Login</Link>
+            </Button>
+          </div>
+        </div>
+      </div>
+    )
+  }
+
   return (
     <div className="container flex items-center justify-center min-h-[calc(100vh-8rem)] py-12">
       <div className="w-full max-w-md space-y-8">
         <div className="text-center space-y-2">
-          <h1 className="text-3xl font-bold font-serif">Welcome Back</h1>
+          <h1 className="text-3xl font-bold font-serif">Create Account</h1>
           <p className="text-muted-foreground">
-            Sign in to access your dashboard
+            Join Divine Tarot and start your spiritual journey
           </p>
         </div>
 
@@ -189,20 +331,41 @@ export default function LoginPage() {
 
           <form onSubmit={handleSubmit} className="space-y-6" noValidate>
             <div className="space-y-2">
+              <label htmlFor="name" className="text-sm font-medium">
+                Full Name
+              </label>
+              <input
+                type="text"
+                id="name"
+                name="name"
+                value={formData.name}
+                onChange={handleChange}
+                onBlur={() => handleBlur('name')}
+                disabled={loading}
+                className={`w-full px-4 py-3 rounded-md border bg-background text-foreground focus:outline-none focus:ring-2 focus:ring-primary disabled:opacity-50 disabled:cursor-not-allowed ${
+                  errors.name && touched.name
+                    ? 'border-destructive focus:ring-destructive'
+                    : 'border-input'
+                }`}
+                placeholder="John Doe"
+                autoComplete="name"
+                autoFocus
+              />
+              {errors.name && touched.name && (
+                <p className="text-sm text-destructive">{errors.name}</p>
+              )}
+            </div>
+
+            <div className="space-y-2">
               <label htmlFor="email" className="text-sm font-medium">
                 Email
               </label>
               <input
                 type="email"
                 id="email"
-                value={email}
-                onChange={(e) => {
-                  setEmail(e.target.value)
-                  if (touched.email) {
-                    const error = validateEmail(e.target.value)
-                    setErrors((prev) => ({ ...prev, email: error }))
-                  }
-                }}
+                name="email"
+                value={formData.email}
+                onChange={handleChange}
                 onBlur={() => handleBlur('email')}
                 disabled={loading}
                 className={`w-full px-4 py-3 rounded-md border bg-background text-foreground focus:outline-none focus:ring-2 focus:ring-primary disabled:opacity-50 disabled:cursor-not-allowed ${
@@ -212,7 +375,6 @@ export default function LoginPage() {
                 }`}
                 placeholder="your@email.com"
                 autoComplete="email"
-                autoFocus
               />
               {errors.email && touched.email && (
                 <p className="text-sm text-destructive">{errors.email}</p>
@@ -220,28 +382,15 @@ export default function LoginPage() {
             </div>
 
             <div className="space-y-2">
-              <div className="flex items-center justify-between">
-                <label htmlFor="password" className="text-sm font-medium">
-                  Password
-                </label>
-                <Link
-                  href="/forgot-password"
-                  className="text-sm text-primary hover:underline"
-                >
-                  Forgot password?
-                </Link>
-              </div>
+              <label htmlFor="password" className="text-sm font-medium">
+                Password
+              </label>
               <input
                 type="password"
                 id="password"
-                value={password}
-                onChange={(e) => {
-                  setPassword(e.target.value)
-                  if (touched.password) {
-                    const error = validatePassword(e.target.value)
-                    setErrors((prev) => ({ ...prev, password: error }))
-                  }
-                }}
+                name="password"
+                value={formData.password}
+                onChange={handleChange}
                 onBlur={() => handleBlur('password')}
                 disabled={loading}
                 className={`w-full px-4 py-3 rounded-md border bg-background text-foreground focus:outline-none focus:ring-2 focus:ring-primary disabled:opacity-50 disabled:cursor-not-allowed ${
@@ -250,11 +399,58 @@ export default function LoginPage() {
                     : 'border-input'
                 }`}
                 placeholder="••••••••"
-                autoComplete="current-password"
+                autoComplete="new-password"
               />
               {errors.password && touched.password && (
                 <p className="text-sm text-destructive">{errors.password}</p>
               )}
+              <p className="text-xs text-muted-foreground">
+                Must be at least 6 characters with uppercase, lowercase, and number
+              </p>
+            </div>
+
+            <div className="space-y-2">
+              <label htmlFor="confirmPassword" className="text-sm font-medium">
+                Confirm Password
+              </label>
+              <input
+                type="password"
+                id="confirmPassword"
+                name="confirmPassword"
+                value={formData.confirmPassword}
+                onChange={handleChange}
+                onBlur={() => handleBlur('confirmPassword')}
+                disabled={loading}
+                className={`w-full px-4 py-3 rounded-md border bg-background text-foreground focus:outline-none focus:ring-2 focus:ring-primary disabled:opacity-50 disabled:cursor-not-allowed ${
+                  errors.confirmPassword && touched.confirmPassword
+                    ? 'border-destructive focus:ring-destructive'
+                    : 'border-input'
+                }`}
+                placeholder="••••••••"
+                autoComplete="new-password"
+              />
+              {errors.confirmPassword && touched.confirmPassword && (
+                <p className="text-sm text-destructive">{errors.confirmPassword}</p>
+              )}
+            </div>
+
+            <div className="flex items-start space-x-2">
+              <input
+                type="checkbox"
+                id="terms"
+                required
+                className="mt-1 h-4 w-4 rounded border-gray-300 text-primary focus:ring-primary"
+              />
+              <label htmlFor="terms" className="text-sm text-muted-foreground">
+                I agree to the{' '}
+                <Link href="/terms" className="text-primary hover:underline">
+                  Terms of Service
+                </Link>{' '}
+                and{' '}
+                <Link href="/privacy" className="text-primary hover:underline">
+                  Privacy Policy
+                </Link>
+              </label>
             </div>
 
             <Button
@@ -285,18 +481,18 @@ export default function LoginPage() {
                       d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
                     ></path>
                   </svg>
-                  Signing in...
+                  Creating account...
                 </span>
               ) : (
-                'Sign In'
+                'Create Account'
               )}
             </Button>
           </form>
 
           <div className="mt-6 text-center text-sm">
-            <span className="text-muted-foreground">Don't have an account? </span>
-            <Link href="/signup" className="text-primary hover:underline font-medium">
-              Sign up
+            <span className="text-muted-foreground">Already have an account? </span>
+            <Link href="/login" className="text-primary hover:underline font-medium">
+              Sign in
             </Link>
           </div>
         </div>

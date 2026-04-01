@@ -2,6 +2,41 @@ import { createServerClient } from '@supabase/ssr'
 import { NextResponse, type NextRequest } from 'next/server'
 import { config } from '@/lib/config'
 
+// Define protected routes that require authentication
+const protectedRoutes = [
+  '/overview',
+  '/profile',
+  '/wallet',
+  '/sessions',
+  '/bookings',
+  '/favorites',
+  '/orders',
+  '/settings',
+]
+
+// Define auth routes that should redirect to dashboard if user is logged in
+const authRoutes = [
+  '/login',
+  '/signup',
+  '/register',
+  '/verify-otp',
+  '/forgot-password',
+  '/reset-password',
+]
+
+// Define public routes that don't require authentication
+const publicRoutes = [
+  '/',
+  '/about',
+  '/ai-guide',
+  '/blog',
+  '/contact',
+  '/store',
+  '/tarot',
+  '/terms',
+  '/privacy',
+]
+
 export async function updateSession(request: NextRequest) {
   let supabaseResponse = NextResponse.next({
     request,
@@ -15,7 +50,7 @@ export async function updateSession(request: NextRequest) {
         getAll() {
           return request.cookies.getAll()
         },
-        setAll(cookiesToSet) {
+        setAll(cookiesToSet: Array<{ name: string; value: string; options?: any }>) {
           cookiesToSet.forEach(({ name, value, options }) =>
             request.cookies.set(name, value)
           )
@@ -38,15 +73,42 @@ export async function updateSession(request: NextRequest) {
     data: { user },
   } = await supabase.auth.getUser()
 
-  if (
-    !user &&
-    !request.nextUrl.pathname.startsWith('/login') &&
-    !request.nextUrl.pathname.startsWith('/auth') &&
-    request.nextUrl.pathname.startsWith('/dashboard')
-  ) {
-    // no user, potentially respond by redirecting the user to the login page
+  const pathname = request.nextUrl.pathname
+
+  // Check if the current route is protected
+  const isProtectedRoute = protectedRoutes.some((route) =>
+    pathname.startsWith(route)
+  )
+
+  // Check if the current route is an auth route
+  const isAuthRoute = authRoutes.some((route) =>
+    pathname.startsWith(route)
+  )
+
+  // Check if the current route is public
+  const isPublicRoute = publicRoutes.some((route) =>
+    pathname === route || pathname.startsWith(route + '/')
+  )
+
+  // If user is not authenticated and trying to access protected route
+  if (!user && isProtectedRoute) {
     const url = request.nextUrl.clone()
     url.pathname = '/login'
+    url.searchParams.set('redirectTo', pathname)
+    return NextResponse.redirect(url)
+  }
+
+  // If user is authenticated and trying to access auth routes
+  if (user && isAuthRoute) {
+    const url = request.nextUrl.clone()
+    url.pathname = '/overview'
+    return NextResponse.redirect(url)
+  }
+
+  // If user is authenticated and trying to access root, redirect to dashboard
+  if (user && pathname === '/') {
+    const url = request.nextUrl.clone()
+    url.pathname = '/overview'
     return NextResponse.redirect(url)
   }
 
