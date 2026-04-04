@@ -1,280 +1,316 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 import { motion } from 'framer-motion'
+import { Sparkles, Check, X, ArrowRight, Star } from 'lucide-react'
 import { Button } from '@/components/ui/button'
-import { useAuth } from '@/hooks/useAuth'
 
-interface Plan {
-  id: string
-  name: string
-  price: number
-  priceId: string
-  readingsPerMonth: number
-  features: string[]
+const fadeInUp = {
+  initial: { opacity: 0, y: 20 },
+  animate: { opacity: 1, y: 0 },
+  transition: { duration: 0.5 }
 }
 
+const plans = [
+  {
+    id: 'free',
+    name: 'Free',
+    price: 0,
+    description: 'Perfect for exploring',
+    features: [
+      '1 reading per day',
+      'Basic card interpretations',
+      'Access to Guidance Hub',
+      'Save up to 3 readings',
+    ],
+    notIncluded: [
+      'Detailed AI interpretations',
+      'Voice narration',
+      'Personalized suggestions',
+    ],
+    cta: 'Start Free',
+    popular: false,
+  },
+  {
+    id: 'premium',
+    name: 'Premium',
+    price: 9.99,
+    description: 'For dedicated seekers',
+    features: [
+      'Unlimited readings',
+      'Detailed AI interpretations',
+      'Save unlimited readings',
+      'Voice narration option',
+      'Personalized suggestions',
+      'Priority support',
+    ],
+    notIncluded: [
+      'Deep dive sessions',
+      'Personal AI coaching',
+    ],
+    cta: 'Go Premium',
+    popular: true,
+  },
+  {
+    id: 'pro',
+    name: 'Pro',
+    price: 19.99,
+    description: 'Maximum transformation',
+    features: [
+      'Everything in Premium',
+      'Personal AI coaching',
+      'Deep dive sessions',
+      'Custom card spreads',
+      'Exclusive pro content',
+      'VIP support channel',
+    ],
+    notIncluded: [],
+    cta: 'Go Pro',
+    popular: false,
+  },
+]
+
+const faqs = [
+  {
+    question: 'Can I cancel anytime?',
+    answer: 'Yes, you can cancel your subscription at any time. You\'ll continue to have access until the end of your billing period, no questions asked.',
+  },
+  {
+    question: 'What payment methods do you accept?',
+    answer: 'We accept all major credit cards through Stripe, including Visa, Mastercard, and American Express. Also supports digital wallets.',
+  },
+  {
+    question: 'Is there a free trial?',
+    answer: 'The Free plan gives you 1 reading per day with no credit card required. It\'s a great way to experience the magic before upgrading.',
+  },
+  {
+    question: 'What if I want to change my plan?',
+    answer: 'You can upgrade or downgrade your plan at any time. Changes take effect immediately, and we\'ll prorate any differences.',
+  },
+]
+
 export default function UpgradePage() {
-  const { user } = useAuth()
-  const [plans, setPlans] = useState<Plan[]>([])
-  const [currentPlan, setCurrentPlan] = useState<string>('free')
-  const [readingsThisMonth, setReadingsThisMonth] = useState(0)
-  const [loading, setLoading] = useState(true)
-  const [checkoutLoading, setCheckoutLoading] = useState<string | null>(null)
-
-  useEffect(() => {
-    fetchSubscription()
-  }, [user])
-
-  const fetchSubscription = async () => {
-    try {
-      const response = await fetch('/api/v1/subscriptions')
-      const data = await response.json()
-
-      if (response.ok) {
-        setPlans(data.data.availablePlans)
-        setCurrentPlan(data.data.subscription.plan_id)
-        setReadingsThisMonth(data.data.readingsThisMonth)
-      }
-    } catch (error) {
-      console.error('Error fetching subscription:', error)
-    } finally {
-      setLoading(false)
-    }
-  }
-
-  const handleCheckout = async (planId: string) => {
-    if (!user) {
-      window.location.href = '/login'
-      return
-    }
-
-    setCheckoutLoading(planId)
-
-    try {
-      const response = await fetch('/api/v1/subscriptions', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ planId }),
-      })
-
-      const data = await response.json()
-
-      if (response.ok && data.data.url) {
-        window.location.href = data.data.url
-      } else {
-        alert('Failed to create checkout session')
-      }
-    } catch (error) {
-      console.error('Error creating checkout:', error)
-      alert('An error occurred')
-    } finally {
-      setCheckoutLoading(null)
-    }
-  }
-
-  if (loading) {
-    return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div>
-      </div>
-    )
-  }
+  const [openFaq, setOpenFaq] = useState<number | null>(null)
 
   return (
-    <div className="min-h-screen py-12 px-4">
-      <div className="max-w-6xl mx-auto space-y-12">
-        {/* Header */}
-        <div className="text-center space-y-4">
-          <motion.h1
-            initial={{ opacity: 0, y: -20 }}
-            animate={{ opacity: 1, y: 0 }}
-            className="text-5xl font-bold font-serif mystical-gradient bg-clip-text text-transparent"
-          >
-            Upgrade Your Experience
-          </motion.h1>
-          <motion.p
-            initial={{ opacity: 0, y: -10 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.1 }}
-            className="text-xl text-muted-foreground max-w-2xl mx-auto"
-          >
-            Unlock unlimited readings and premium features
-          </motion.p>
-        </div>
-
-        {/* Current Usage */}
-        {user && (
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.2 }}
-            className="max-w-2xl mx-auto"
-          >
-            <div className="p-6 rounded-2xl border bg-card/50 backdrop-blur-sm">
-              <div className="flex items-center justify-between">
-                <div>
-                  <h3 className="font-semibold">Current Plan: {currentPlan.toUpperCase()}</h3>
-                  <p className="text-sm text-muted-foreground">
-                    {readingsThisMonth} readings this month
-                  </p>
-                </div>
-                <div className="text-right">
-                  <div className="text-2xl font-bold text-primary">
-                    {currentPlan === 'free' ? '3' : '∞'}
-                  </div>
-                  <div className="text-xs text-muted-foreground">
-                    {currentPlan === 'free' ? 'readings/month' : 'unlimited'}
-                  </div>
-                </div>
-              </div>
-            </div>
-          </motion.div>
-        )}
-
-        {/* Pricing Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-          {plans.map((plan, index) => (
-            <motion.div
-              key={plan.id}
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.3 + index * 0.1 }}
-              className={`relative p-8 rounded-2xl border-2 transition-all ${
-                currentPlan === plan.id
-                  ? 'border-primary bg-primary/10 shadow-xl'
-                  : plan.id === 'pro'
-                  ? 'border-purple-500 bg-purple-500/10 shadow-xl scale-105'
-                  : 'border-border hover:border-primary/50'
-              }`}
-            >
-              {plan.id === 'pro' && (
-                <div className="absolute -top-4 left-1/2 transform -translate-x-1/2">
-                  <span className="px-4 py-1 bg-purple-500 text-white text-sm font-semibold rounded-full">
-                    Most Popular
-                  </span>
-                </div>
-              )}
-
-              <div className="text-center space-y-4">
-                <h3 className="text-2xl font-bold">{plan.name}</h3>
-                <div className="space-y-1">
-                  <div className="text-4xl font-bold">
-                    ${plan.price}
-                    <span className="text-lg font-normal text-muted-foreground">
-                      /month
-                    </span>
-                  </div>
-                  {plan.price === 0 && (
-                    <p className="text-sm text-muted-foreground">Free forever</p>
-                  )}
-                </div>
-              </div>
-
-              <ul className="mt-8 space-y-3">
-                {plan.features.map((feature, featureIndex) => (
-                  <li key={featureIndex} className="flex items-center gap-2">
-                    <svg
-                      className="w-5 h-5 text-green-500 flex-shrink-0"
-                      fill="none"
-                      stroke="currentColor"
-                      viewBox="0 0 24 24"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M5 13l4 4L19 7"
-                      />
-                    </svg>
-                    <span className="text-sm">{feature}</span>
-                  </li>
-                ))}
-              </ul>
-
-              <div className="mt-8">
-                {currentPlan === plan.id ? (
-                  <Button disabled className="w-full">
-                    Current Plan
-                  </Button>
-                ) : plan.price === 0 ? (
-                  <Button variant="outline" className="w-full" disabled>
-                    Free Plan
-                  </Button>
-                ) : (
-                  <Button
-                    onClick={() => handleCheckout(plan.id)}
-                    disabled={checkoutLoading === plan.id}
-                    className="w-full"
-                  >
-                    {checkoutLoading === plan.id ? (
-                      <span className="flex items-center gap-2">
-                        <svg
-                          className="animate-spin h-4 w-4"
-                          xmlns="http://www.w3.org/2000/svg"
-                          fill="none"
-                          viewBox="0 0 24 24"
-                        >
-                          <circle
-                            className="opacity-25"
-                            cx="12"
-                            cy="12"
-                            r="10"
-                            stroke="currentColor"
-                            strokeWidth="4"
-                          ></circle>
-                          <path
-                            className="opacity-75"
-                            fill="currentColor"
-                            d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-                          ></path>
-                        </svg>
-                        Processing...
-                      </span>
-                    ) : (
-                      `Upgrade to ${plan.name}`
-                    )}
-                  </Button>
-                )}
-              </div>
-            </motion.div>
-          ))}
-        </div>
-
-        {/* FAQ */}
-        <motion.div
+    <div className="min-h-screen mystical-gradient">
+      {/* Header */}
+      <section className="py-20 px-4">
+        <motion.div 
+          className="max-w-3xl mx-auto text-center"
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.6 }}
-          className="max-w-3xl mx-auto"
         >
-          <h2 className="text-3xl font-bold font-serif text-center mb-8">
-            Frequently Asked Questions
-          </h2>
+          <motion.div 
+            className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary/10 border border-primary/20 mb-6"
+            animate={{ scale: [1, 1.02, 1] }}
+            transition={{ duration: 2, repeat: Infinity }}
+          >
+            <Sparkles className="w-4 h-4 text-primary" />
+            <span className="text-sm text-primary font-medium">Unlock Deeper Insights</span>
+          </motion.div>
+          
+          <h1 className="text-4xl md:text-5xl font-serif font-bold mb-6">
+            Choose Your Path
+          </h1>
+          <p className="text-lg text-muted-foreground max-w-xl mx-auto">
+            Whether you\'re just starting or seeking deep transformation, 
+            there\'s a plan that honors your journey.
+          </p>
+        </motion.div>
+      </section>
+
+      {/* Pricing Cards */}
+      <section className="py-16 px-4">
+        <div className="max-w-5xl mx-auto">
+          <div className="grid md:grid-cols-3 gap-8">
+            {plans.map((plan, index) => (
+              <motion.div
+                key={plan.id}
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: index * 0.1 }}
+                className={`relative p-8 rounded-3xl ${
+                  plan.popular 
+                    ? 'bg-gradient-to-br from-primary/10 to-purple-400/10 border-2 border-primary/30 shadow-lg scale-105 z-10' 
+                    : 'bg-card/80 backdrop-blur-sm border border-border/50 glass'
+                }`}
+              >
+                {plan.popular && (
+                  <div className="absolute -top-4 left-1/2 transform -translate-x-1/2">
+                    <span className="px-4 py-1.5 bg-gradient-to-r from-primary to-purple-400 text-white text-sm font-semibold rounded-full flex items-center gap-1">
+                      <Star className="w-3 h-3" /> Most Popular
+                    </span>
+                  </div>
+                )}
+
+                <div className="text-center mb-6">
+                  <h3 className="text-xl font-serif font-semibold mb-2">{plan.name}</h3>
+                  <p className="text-sm text-muted-foreground">{plan.description}</p>
+                </div>
+
+                <div className="text-center mb-8">
+                  <div className="text-4xl font-bold">
+                    ${plan.price}
+                    <span className="text-sm font-normal text-muted-foreground">/month</span>
+                  </div>
+                  {plan.price === 0 && (
+                    <p className="text-sm text-muted-foreground mt-1">No credit card required</p>
+                  )}
+                </div>
+
+                <ul className="space-y-3 mb-8">
+                  {plan.features.map((feature, i) => (
+                    <li key={i} className="flex items-center gap-3 text-sm">
+                      <div className="w-5 h-5 rounded-full bg-primary/10 flex items-center justify-center flex-shrink-0">
+                        <Check className="w-3 h-3 text-primary" />
+                      </div>
+                      {feature}
+                    </li>
+                  ))}
+                  {plan.notIncluded.map((feature, i) => (
+                    <li key={i} className="flex items-center gap-3 text-sm text-muted-foreground">
+                      <div className="w-5 h-5 rounded-full bg-muted flex items-center justify-center flex-shrink-0">
+                        <X className="w-3 h-3 text-muted-foreground/50" />
+                      </div>
+                      {feature}
+                    </li>
+                  ))}
+                </ul>
+
+                <Button 
+                  className={`w-full rounded-2xl ${
+                    plan.popular 
+                      ? 'btn-premium' 
+                      : 'bg-muted text-foreground hover:bg-muted/80'
+                  }`}
+                >
+                  {plan.cta}
+                  <ArrowRight className="w-4 h-4 ml-2" />
+                </Button>
+              </motion.div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Features Comparison */}
+      <section className="py-16 px-4 bg-muted/30">
+        <div className="max-w-4xl mx-auto">
+          <motion.div 
+            className="text-center mb-12"
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+          >
+            <h2 className="text-3xl font-serif font-bold mb-4">
+              Why Go Premium?
+            </h2>
+            <p className="text-muted-foreground">
+              Unlock the full potential of your spiritual journey
+            </p>
+          </motion.div>
+
+          <div className="grid md:grid-cols-2 gap-6">
+            {[
+              { title: 'Unlimited Readings', desc: 'Ask as many questions as you need—no limits, no restrictions.' },
+              { title: 'Deeper Interpretations', desc: 'Get detailed, nuanced readings that address your unique situation.' },
+              { title: 'Voice Narration', desc: 'Listen to your readings for a more immersive experience.' },
+              { title: 'Personalized Insights', desc: 'Receive suggestions based on your reading history and patterns.' },
+            ].map((feature, index) => (
+              <motion.div
+                key={feature.title}
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: index * 0.1 }}
+                className="p-6 rounded-2xl bg-card/80 backdrop-blur-sm border border-border/50"
+              >
+                <div className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center mb-4">
+                  <Check className="w-5 h-5 text-primary" />
+                </div>
+                <h3 className="font-semibold mb-2">{feature.title}</h3>
+                <p className="text-sm text-muted-foreground">{feature.desc}</p>
+              </motion.div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* FAQ */}
+      <section className="py-16 px-4">
+        <div className="max-w-3xl mx-auto">
+          <motion.div 
+            className="text-center mb-12"
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+          >
+            <h2 className="text-3xl font-serif font-bold mb-4">
+              Frequently Asked Questions
+            </h2>
+            <p className="text-muted-foreground">
+              Everything you need to know
+            </p>
+          </motion.div>
+
           <div className="space-y-4">
-            <div className="p-6 rounded-xl border bg-card/50">
-              <h3 className="font-semibold mb-2">Can I cancel anytime?</h3>
-              <p className="text-sm text-muted-foreground">
-                Yes, you can cancel your subscription at any time. You'll continue to have access until the end of your billing period.
-              </p>
-            </div>
-            <div className="p-6 rounded-xl border bg-card/50">
-              <h3 className="font-semibold mb-2">What payment methods do you accept?</h3>
-              <p className="text-sm text-muted-foreground">
-                We accept all major credit cards through Stripe, including Visa, Mastercard, and American Express.
-              </p>
-            </div>
-            <div className="p-6 rounded-xl border bg-card/50">
-              <h3 className="font-semibold mb-2">Is there a free trial?</h3>
-              <p className="text-sm text-muted-foreground">
-                Yes! The Free plan gives you 3 readings per month with no credit card required. Upgrade anytime for unlimited access.
-              </p>
-            </div>
+            {faqs.map((faq, index) => (
+              <motion.div
+                key={index}
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: index * 0.1 }}
+                className="p-6 rounded-2xl bg-card/80 backdrop-blur-sm border border-border/50"
+              >
+                <button
+                  onClick={() => setOpenFaq(openFaq === index ? null : index)}
+                  className="flex items-center justify-between w-full text-left"
+                >
+                  <span className="font-medium">{faq.question}</span>
+                  <ArrowRight className={`w-5 h-5 text-muted-foreground transition-transform ${openFaq === index ? 'rotate-90' : ''}`} />
+                </button>
+                {openFaq === index && (
+                  <motion.div
+                    initial={{ opacity: 0, height: 0 }}
+                    animate={{ opacity: 1, height: 'auto' }}
+                    className="mt-4 text-muted-foreground"
+                  >
+                    {faq.answer}
+                  </motion.div>
+                )}
+              </motion.div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* CTA */}
+      <section className="py-16 px-4 bg-gradient-to-b from-muted/30 to-background">
+        <motion.div 
+          className="max-w-2xl mx-auto text-center p-10 rounded-3xl mystical-gradient"
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+        >
+          <h2 className="text-2xl font-serif font-bold text-foreground mb-4">
+            Ready to Begin?
+          </h2>
+          <p className="text-foreground/80 mb-8">
+            Your spiritual transformation starts with a single question. 
+            The cards are waiting.
+          </p>
+          <div className="flex flex-col sm:flex-row gap-4 justify-center">
+            <Button asChild className="btn-premium rounded-2xl px-8">
+              <a href="/tarot">Start Free Reading</a>
+            </Button>
+            <Button asChild variant="outline" className="rounded-2xl px-8 border-white/30 text-foreground hover:bg-white/10">
+              <a href="/blog">Explore Guidance</a>
+            </Button>
           </div>
         </motion.div>
-      </div>
+      </section>
     </div>
   )
 }

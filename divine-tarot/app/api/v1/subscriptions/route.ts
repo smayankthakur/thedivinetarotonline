@@ -4,6 +4,22 @@ import { stripe, PLANS } from '@/lib/payments/stripe'
 
 export async function GET(request: Request) {
   try {
+    if (!stripe) {
+      return NextResponse.json({
+        success: true,
+        data: {
+          subscription: {
+            plan_id: 'free',
+            status: 'active',
+          },
+          currentPlan: PLANS.FREE,
+          readingsThisMonth: 0,
+          hasReachedLimit: false,
+          availablePlans: Object.values(PLANS),
+        },
+      })
+    }
+    
     const supabase = createClient()
     
     // Get authenticated user
@@ -67,6 +83,13 @@ export async function GET(request: Request) {
 
 export async function POST(request: Request) {
   try {
+    if (!stripe) {
+      return NextResponse.json(
+        { error: 'Payment service not configured' },
+        { status: 500 }
+      )
+    }
+
     const supabase = createClient()
     
     // Get authenticated user

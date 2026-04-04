@@ -5,6 +5,13 @@ import { createClient } from '@/lib/supabase/server'
 
 export async function POST(request: Request) {
   try {
+    if (!stripe) {
+      return NextResponse.json(
+        { error: 'Payment service not configured' },
+        { status: 500 }
+      )
+    }
+
     const body = await request.text()
     const headersList = await headers()
     const signature = headersList.get('stripe-signature')

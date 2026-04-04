@@ -40,6 +40,13 @@ export const config = {
     posthogKey: process.env.NEXT_PUBLIC_POSTHOG_KEY || '',
     posthogHost: process.env.NEXT_PUBLIC_POSTHOG_HOST || '',
   },
+  calendar: {
+    google: {
+      clientEmail: process.env.GOOGLE_CLIENT_EMAIL || '',
+      privateKey: process.env.GOOGLE_PRIVATE_KEY || '',
+      calendarId: process.env.GOOGLE_CALENDAR_ID || 'primary',
+    },
+  },
 } as const
 
 export function validateConfig(): void {

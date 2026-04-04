@@ -103,8 +103,8 @@ export async function POST(request: Request) {
           id: card.id,
           name: card.name,
           suit: card.suit,
-          meaning: card.meaning,
-          reversedMeaning: card.reversedMeaning,
+          meaning: card.upright_meaning,
+          reversedMeaning: card.reversed_meaning,
           description: card.description,
           keywords: card.keywords,
           image: card.image,
@@ -163,7 +163,7 @@ function generateInterpretation(cards: any[], question: string, spread: any): st
 function generateSingleCardInterpretation(card: any, question: string): string {
   return `The card drawn for your question "${question}" is **${card.name}**.
 
-**Core Message:** ${card.meaning}
+**Core Message:** ${card.upright_meaning}
 
 **Detailed Insight:** ${card.description}
 
@@ -177,13 +177,13 @@ function generateThreeCardInterpretation(cards: any[], question: string): string
   
   return `Your three-card reading for "${question}" reveals a powerful timeline:
 
-**Past - ${past.name}:** ${past.meaning}
+**Past - ${past.name}:** ${past.upright_meaning}
 ${past.description}
 
-**Present - ${present.name}:** ${present.meaning}
+**Present - ${present.name}:** ${present.upright_meaning}
 ${present.description}
 
-**Future - ${future.name}:** ${future.meaning}
+**Future - ${future.name}:** ${future.upright_meaning}
 ${future.description}
 
 **Overall Guidance:** The cards show a journey from ${past.keywords[0]} through ${present.keywords[0]} toward ${future.keywords[0]}. Your past experiences with ${past.keywords[1]} have shaped your current situation of ${present.keywords[1]}. The future holds promise of ${future.keywords[1]} if you continue on your current path. Trust the process and embrace the transformation ahead.`
@@ -206,7 +206,7 @@ function generateCelticCrossInterpretation(cards: any[], question: string): stri
   let interpretation = `Your Celtic Cross reading for "${question}" provides deep insight into your situation:\n\n`
   
   cards.forEach((card, index) => {
-    interpretation += `**${positions[index]} - ${card.name}:** ${card.meaning}\n`
+    interpretation += `**${positions[index]} - ${card.name}:** ${card.upright_meaning}\n`
     interpretation += `${card.description}\n\n`
   })
   
@@ -220,7 +220,7 @@ function generateGenericInterpretation(cards: any[], question: string, spread: a
   
   cards.forEach((card, index) => {
     const position = spread.positions[index]?.name || `Position ${index + 1}`
-    interpretation += `**${position} - ${card.name}:** ${card.meaning}\n`
+    interpretation += `**${position} - ${card.name}:** ${card.upright_meaning}\n`
     interpretation += `${card.description}\n\n`
   })
   

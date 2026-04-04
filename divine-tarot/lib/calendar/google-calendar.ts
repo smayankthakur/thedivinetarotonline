@@ -1,9 +1,10 @@
 import { google } from 'googleapis'
 import { config } from '@/lib/config'
 
-export const calendar = google.calendar({
+const googleClient = google as any
+export const calendar = googleClient.calendar({
   version: 'v3',
-  auth: new google.auth.GoogleAuth({
+  auth: new googleClient.auth.GoogleAuth({
     credentials: {
       client_email: config.calendar.google.clientEmail,
       private_key: config.calendar.google.privateKey?.replace(/\\n/g, '\n'),
@@ -71,7 +72,7 @@ export async function getAvailableSlots(
         slotEnd.setMinutes(slotEnd.getMinutes() + duration)
 
         // Check if slot conflicts with existing events
-        const isAvailable = !existingEvents.some((event) => {
+        const isAvailable = !existingEvents.some((event: any) => {
           const eventStart = new Date(event.start?.dateTime || '')
           const eventEnd = new Date(event.end?.dateTime || '')
 

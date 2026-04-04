@@ -1,10 +1,14 @@
 import Stripe from 'stripe'
 import { config } from '@/lib/config'
 
-export const stripe = new Stripe(config.payments.stripe.secretKey || '', {
-  apiVersion: '2024-12-18.acacia',
-  typescript: true,
-})
+const stripeSecretKey = config.payments.stripe.secretKey || ''
+
+export const stripe = stripeSecretKey 
+  ? new Stripe(stripeSecretKey, {
+      apiVersion: '2026-03-25.dahlia',
+      typescript: true,
+    })
+  : null
 
 export const PLANS = {
   FREE: {
