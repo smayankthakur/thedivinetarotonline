@@ -153,9 +153,9 @@ export default function HomePage() {
           variants={staggerContainer}
         >
           <div className="max-w-3xl mx-auto text-center space-y-8">
-            <motion.div variants={fadeInUp} className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/10 backdrop-blur-sm border border-white/20">
-              <Sparkle className="w-4 h-4 text-amber-400" />
-              <span className="text-sm text-white/90">AI-Powered Spiritual Guidance</span>
+            <motion.div variants={fadeInUp} className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-lavender-100/50 backdrop-blur-sm border border-lavender-200/50">
+              <Sparkle className="w-4 h-4 text-amber-500" />
+              <span className="text-sm text-foreground">AI-Powered Spiritual Guidance</span>
             </motion.div>
             
             <motion.h1 
@@ -179,7 +179,7 @@ export default function HomePage() {
                 placeholder="Type your question here..."
                 value={question}
                 onChange={(e) => setQuestion(e.target.value)}
-                className="h-14 text-lg bg-white/90 backdrop-blur border-0 shadow-soft focus:ring-2 focus:ring-primary/30"
+                className="h-14 text-lg bg-white border border-border shadow-soft focus:ring-2 focus:ring-primary/30"
               />
               <Button asChild size="lg" className="h-14 px-8 btn-premium text-lg rounded-2xl">
                 <Link href={question ? `/tarot?question=${encodeURIComponent(question)}` : '/tarot'}>
@@ -209,15 +209,15 @@ export default function HomePage() {
             transition={{ duration: 0.8 }}
           >
             <div className="relative">
-              <div className="w-64 h-64 rounded-full bg-gradient-to-br from-primary/20 to-purple-400/20 flex items-center justify-center animate-breathe">
-                <div className="w-56 h-56 rounded-full bg-gradient-to-br from-ivory to-lavender-100 border-4 border-gold-300/50 shadow-soft overflow-hidden">
-                  <div className="w-full h-full bg-gradient-to-br from-primary/10 to-purple-400/10 flex items-center justify-center">
-                    <Sparkles className="w-16 h-16 text-primary/30" />
+              <div className="w-64 h-64 rounded-full bg-gradient-to-br from-lavender-100 to-lavender-200/50 flex items-center justify-center animate-breathe">
+                <div className="w-56 h-56 rounded-full bg-gradient-to-br from-white to-lavender-50 border-4 border-gold-300/50 shadow-soft overflow-hidden">
+                  <div className="w-full h-full bg-gradient-to-br from-lavender-50 to-white flex items-center justify-center">
+                    <Sparkles className="w-16 h-16 text-primary/50" />
                   </div>
                 </div>
               </div>
               <motion.div 
-                className="absolute -bottom-4 -right-4 w-12 h-12 rounded-full bg-gradient-to-r from-amber-400 to-gold-500 flex items-center justify-center shadow-lg"
+                className="absolute -bottom-4 -right-4 w-12 h-12 rounded-full bg-gradient-to-r from-gold-400 to-gold-500 flex items-center justify-center shadow-lg"
                 animate={{ scale: [1, 1.1, 1] }}
                 transition={{ duration: 2, repeat: Infinity }}
               >
@@ -267,11 +267,11 @@ export default function HomePage() {
                 viewport={{ once: true }}
                 transition={{ delay: index * 0.2 }}
               >
-                <div className="absolute -top-4 -left-4 w-10 h-10 rounded-full bg-gradient-to-r from-primary to-purple-400 flex items-center justify-center text-white font-bold text-lg shadow-lg">
+                <div className="absolute -top-4 -left-4 w-10 h-10 rounded-full bg-gradient-to-r from-lavender-400 to-lavender-500 flex items-center justify-center text-white font-bold text-lg shadow-lg">
                   {index + 1}
                 </div>
                 
-                <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-primary/20 to-purple-400/20 flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
+                <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-lavender-100 to-lavender-200 flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
                   <step.icon className="w-8 h-8 text-primary" />
                 </div>
                 
@@ -381,8 +381,8 @@ export default function HomePage() {
                 </p>
                 
                 <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 rounded-full bg-gradient-to-br from-primary/30 to-purple-400/30 flex items-center justify-center">
-                    <span className="text-primary font-semibold">{testimonial.author[0]}</span>
+                  <div className="w-10 h-10 rounded-full bg-gradient-to-br from-lavender-200 to-lavender-300 flex items-center justify-center">
+                    <span className="text-foreground font-semibold">{testimonial.author[0]}</span>
                   </div>
                   <div>
                     <p className="font-medium text-sm">{testimonial.author}</p>
@@ -408,7 +408,7 @@ export default function HomePage() {
             <h2 className="text-3xl md:text-4xl font-serif font-bold">
               Ready for Your Reading?
             </h2>
-            <p className="text-lg text-foreground/80 max-w-lg mx-auto">
+            <p className="text-lg text-muted-foreground max-w-lg mx-auto">
               Connect with the cards and discover what the universe has to say.
               Your answers await.
             </p>
@@ -419,7 +419,7 @@ export default function HomePage() {
                   <ArrowRight className="w-5 h-5 ml-2" />
                 </Link>
               </Button>
-              <Button asChild variant="outline" size="lg" className="rounded-full px-8 border-white/30 text-foreground hover:bg-white/10">
+              <Button asChild variant="outline" size="lg" className="rounded-full px-8 border-border text-foreground hover:bg-accent/50">
                 <Link href="/blog">
                   Explore Guidance
                 </Link>

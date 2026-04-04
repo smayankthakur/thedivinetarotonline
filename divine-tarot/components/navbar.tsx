@@ -28,80 +28,69 @@ export function Navbar() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
 
   return (
-    <header className="sticky top-0 z-50 w-full glass border-b border-border/20 bg-background/80 backdrop-blur-md supports-[backdrop-filter]:bg-background/60">
-      <nav className="container flex h-16 items-center justify-between">
-        <div className="flex items-center gap-6">
-          <Link href="/" className="flex items-center gap-2 group">
-            <Image
-              src="/logo.png"
-              alt="Divine Tarot"
-              width={40}
-              height={40}
-              className="h-10 w-auto"
-            />
+    <header className="sticky top-0 z-50 w-full border-b border-border/40 bg-background/90 backdrop-blur-md supports-[backdrop-filter]:bg-background/80">
+      <nav className="container flex h-16 items-center justify-between px-4 md:px-8 lg:px-12">
+        {/* Left: Logo */}
+        <div className="flex items-center">
+          <Link href="/" className="flex items-center gap-3 group">
+            <div className="relative">
+              <Image
+                src="/logo.png"
+                alt="Divine Tarot"
+                width={48}
+                height={48}
+                className="h-10 md:h-12 w-auto transition-transform duration-300 group-hover:scale-105"
+              />
+              <div className="absolute inset-0 rounded-full bg-primary/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300 blur-md" />
+            </div>
           </Link>
+        </div>
 
-          {/* Desktop Navigation */}
-          <div className="hidden md:flex md:gap-x-8">
+        {/* Center: Navigation Links */}
+        <div className="hidden md:flex items-center justify-center absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2">
+          <div className="flex items-center gap-1">
             {navigation.map((item) => (
               <Link
                 key={item.name}
                 href={item.href}
                 className={cn(
-                  'text-sm font-medium transition-all hover:text-primary relative py-1',
+                  'text-sm font-medium transition-all duration-200 px-4 py-2 relative group',
                   pathname === item.href
-                    ? 'text-primary'
-                    : 'text-muted-foreground'
+                    ? 'text-foreground'
+                    : 'text-muted-foreground hover:text-foreground'
                 )}
               >
                 {item.name}
-                {pathname === item.href && (
-                  <span className="absolute bottom-0 left-0 w-full h-0.5 bg-gradient-to-r from-primary to-purple-400 rounded-full" />
-                )}
+                <span className={cn(
+                  'absolute bottom-0 left-1/2 -translate-x-1/2 h-0.5 w-0 bg-primary/60 rounded-full transition-all duration-200',
+                  pathname === item.href ? 'w-full' : 'group-hover:w-1/2'
+                )} />
               </Link>
             ))}
           </div>
         </div>
 
-        <div className="flex items-center gap-4">
-          {/* Theme Toggle */}
-          {/* <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button variant="ghost" size="icon" className="rounded-full hover:bg-primary/10">
-                <Sun className="h-5 w-5 rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0" />
-                <Moon className="absolute h-5 w-5 rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100" />
-                <span className="sr-only">Toggle theme</span>
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="end" className="glass">
-              <DropdownMenuItem onClick={() => setTheme('light')}>
-                Light
-              </DropdownMenuItem>
-              <DropdownMenuItem onClick={() => setTheme('dark')}>
-                Dark
-              </DropdownMenuItem>
-              <DropdownMenuItem onClick={() => setTheme('system')}>
-                System
-              </DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenu> */}
-
-          {/* Login Button */}
-          <Button asChild className="btn-premium rounded-full px-6 hidden sm:flex">
+        {/* Right: CTA + Avatar */}
+        <div className="flex items-center gap-3">
+          {/* Login Button - Soft Gold/Lavender Gradient */}
+          <Button 
+            asChild 
+            className="hidden sm:flex rounded-full px-5 py-5 text-sm font-medium bg-gradient-to-r from-lavender-300 to-lavender-400 text-foreground hover:from-lavender-400 hover:to-lavender-500 hover:scale-[1.03] transition-all duration-200 shadow-sm border border-lavender-200/50"
+          >
             <Link href="/login">Begin Your Journey</Link>
           </Button>
 
           {/* User Menu */}
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <Button variant="ghost" className="relative h-9 w-9 rounded-full ring-2 ring-primary/20 hover:ring-primary/40 transition-all">
+              <Button variant="ghost" className="relative h-9 w-9 rounded-full ring-1 ring-border hover:ring-primary/30 transition-all duration-200">
                 <Avatar className="h-9 w-9">
                   <AvatarImage src="/avatars/01.png" alt="@user" />
-                  <AvatarFallback className="bg-gradient-to-br from-primary to-purple-400 text-white">U</AvatarFallback>
+                  <AvatarFallback className="bg-gradient-to-br from-lavender-300 to-lavender-500 text-foreground text-sm">U</AvatarFallback>
                 </Avatar>
               </Button>
             </DropdownMenuTrigger>
-            <DropdownMenuContent className="w-56 glass" align="end" forceMount>
+            <DropdownMenuContent className="w-56 bg-card border-border" align="end" forceMount>
               <DropdownMenuItem asChild>
                 <Link href="/dashboard" className="flex items-center">Dashboard</Link>
               </DropdownMenuItem>
@@ -135,24 +124,27 @@ export function Navbar() {
 
       {/* Mobile Navigation */}
       {mobileMenuOpen && (
-        <div className="md:hidden glass border-t">
-          <div className="space-y-2 px-4 py-4">
+        <div className="md:hidden border-t bg-background/95 backdrop-blur-md">
+          <div className="space-y-1 px-4 py-4">
             {navigation.map((item) => (
               <Link
                 key={item.name}
                 href={item.href}
                 className={cn(
-                  'block rounded-xl px-4 py-3 text-base font-medium transition-all',
+                  'block rounded-lg px-4 py-3 text-base font-medium transition-all duration-200',
                   pathname === item.href
-                    ? 'bg-primary/10 text-primary'
-                    : 'text-muted-foreground hover:bg-accent hover:text-accent-foreground'
+                    ? 'bg-accent text-foreground'
+                    : 'text-muted-foreground hover:bg-accent/50 hover:text-foreground'
                 )}
                 onClick={() => setMobileMenuOpen(false)}
               >
                 {item.name}
               </Link>
             ))}
-            <Button asChild className="btn-premium w-full mt-4 rounded-xl">
+            <Button 
+              asChild 
+              className="w-full mt-4 rounded-full bg-gradient-to-r from-lavender-300 to-lavender-400 text-foreground hover:from-lavender-400 hover:to-lavender-500 transition-all duration-200 shadow-sm"
+            >
               <Link href="/login">Begin Your Journey</Link>
             </Button>
           </div>

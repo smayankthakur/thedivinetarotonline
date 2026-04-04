@@ -1,4 +1,5 @@
 import Link from 'next/link'
+import Image from 'next/image'
 import { Sparkles, Mail, Heart } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 
@@ -48,13 +49,21 @@ const navigation = {
 
 export function Footer() {
   return (
-    <footer className="bg-gradient-to-b from-background to-muted/30 border-t">
-      <div className="container py-16">
+    <footer className="bg-cream-50 border-t border-border/50">
+      <div className="container py-16 px-4 md:px-8">
         <div className="xl:grid xl:grid-cols-4 xl:gap-12">
           <div className="space-y-6">
-            <Link href="/" className="flex items-center gap-2">
-              <Sparkles className="h-7 w-7 text-primary animate-pulse-glow" />
-              <span className="text-2xl font-bold font-serif">Divine Tarot</span>
+            <Link href="/" className="flex items-center gap-3">
+              <div className="relative">
+                <Image
+                  src="/logo.png"
+                  alt="Divine Tarot"
+                  width={48}
+                  height={48}
+                  className="h-10 w-auto"
+                />
+              </div>
+              <span className="text-2xl font-bold font-serif text-foreground">Divine Tarot</span>
             </Link>
             <p className="text-sm text-muted-foreground leading-relaxed">
               Your personal AI-powered tarot guide. Receive intuitive, compassionate guidance whenever you need it.
@@ -64,7 +73,7 @@ export function Footer() {
                 <a
                   key={item.name}
                   href={item.href}
-                  className="text-muted-foreground hover:text-primary transition-colors p-2 rounded-full hover:bg-primary/10"
+                  className="text-muted-foreground hover:text-primary transition-colors p-2 rounded-full hover:bg-accent/50"
                 >
                   <span className="sr-only">{item.name}</span>
                   <item.icon className="h-5 w-5" aria-hidden="true" />

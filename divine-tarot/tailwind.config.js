@@ -52,6 +52,14 @@ module.exports = {
           foreground: "hsl(var(--card-foreground))",
         },
         ivory: "#fdf8f0",
+        cream: {
+          50: "#faf9f6",
+          100: "#f5f3ef",
+          200: "#ebe8e3",
+          300: "#ddd8d0",
+          400: "#ccc6bc",
+          500: "#bbb3a8",
+        },
         gold: {
           100: "#faf5e6",
           200: "#f5ead0",
@@ -139,12 +147,13 @@ module.exports = {
         sans: ['var(--font-sans)', 'Inter', 'system-ui', 'sans-serif'],
       },
       backgroundImage: {
-        'mystical-gradient': 'linear-gradient(135deg, #fdf8f0 0%, #f3e8ff 50%, #e9d5ff 100%)',
-        'mystical-gradient-dark': 'linear-gradient(135deg, #1e1b4b 0%, #4c1d95 50%, #6b21a8 100%)',
+        'mystical-gradient': 'radial-gradient(circle at top, #f3e8ff 0%, #faf9f6 50%, #faf5f0 100%)',
+        'mystical-gradient-dark': 'radial-gradient(circle at top, #1e1b4b 0%, #2d1b4e 50%, #1a1025 100%)',
         'gold-gradient': 'linear-gradient(135deg, #d4af37 0%, #f59e0b 100%)',
         'ivory-gradient': 'linear-gradient(180deg, #fdf8f0 0%, #faf5ff 100%)',
         'subtle-glow': 'radial-gradient(circle at center, rgba(167, 139, 250, 0.15) 0%, transparent 70%)',
         'card-shine': 'linear-gradient(135deg, rgba(255,255,255,0.1) 0%, transparent 50%, rgba(255,255,255,0.05) 100%)',
+        'light-premium': 'linear-gradient(180deg, #FAF9F6 0%, #FFFFFF 100%)',
       },
       boxShadow: {
         'glow': '0 0 20px rgba(167, 139, 250, 0.3)',

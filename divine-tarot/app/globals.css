@@ -4,70 +4,70 @@
 
 @layer base {
   :root {
-    --background: 45 33% 97%;
-    --foreground: 24 10% 15%;
+    --background: 38 30% 98%;
+    --foreground: 220 10% 15%;
 
     --card: 0 0% 100%;
-    --card-foreground: 24 10% 15%;
+    --card-foreground: 220 10% 15%;
 
     --popover: 0 0% 100%;
-    --popover-foreground: 24 10% 15%;
+    --popover-foreground: 220 10% 15%;
 
-    --primary: 265 40% 55%;
-    --primary-foreground: 0 0% 100%;
+    --primary: 270 40% 65%;
+    --primary-foreground: 220 10% 10%;
 
-    --secondary: 45 20% 92%;
-    --secondary-foreground: 24 10% 15%;
+    --secondary: 40 20% 96%;
+    --secondary-foreground: 220 10% 15%;
 
-    --muted: 45 10% 90%;
-    --muted-foreground: 30 5% 40%;
+    --muted: 40 10% 96%;
+    --muted-foreground: 220 8% 45%;
 
-    --accent: 45 25% 85%;
-    --accent-foreground: 24 10% 15%;
+    --accent: 270 30% 92%;
+    --accent-foreground: 220 10% 15%;
 
     --destructive: 0 60% 50%;
     --destructive-foreground: 0 0% 100%;
 
-    --border: 45 15% 85%;
-    --input: 45 15% 85%;
-    --ring: 265 40% 55%;
+    --border: 220 10% 88%;
+    --input: 220 10% 88%;
+    --ring: 270 40% 65%;
 
     --radius: 1rem;
     
-    --ivory: 45 33% 97%;
+    --cream: 38 30% 98%;
     --soft-gold: 43 65% 65%;
-    --lavender: 265 30% 90%;
-    --mystical-purple: 265 40% 55%;
+    --light-lavender: 270 30% 92%;
+    --mystical-purple: 270 40% 65%;
   }
 
   .dark {
-    --background: 240 10% 4%;
-    --foreground: 45 20% 95%;
+    --background: 220 10% 5%;
+    --foreground: 40 20% 95%;
 
-    --card: 240 10% 6%;
-    --card-foreground: 45 20% 95%;
+    --card: 220 10% 8%;
+    --card-foreground: 40 20% 95%;
 
-    --popover: 240 10% 6%;
-    --popover-foreground: 45 20% 95%;
+    --popover: 220 10% 8%;
+    --popover-foreground: 40 20% 95%;
 
-    --primary: 265 60% 65%;
-    --primary-foreground: 0 0% 100%;
+    --primary: 270 50% 70%;
+    --primary-foreground: 220 10% 10%;
 
-    --secondary: 240 8% 12%;
-    --secondary-foreground: 45 20% 95%;
+    --secondary: 220 10% 12%;
+    --secondary-foreground: 40 20% 95%;
 
-    --muted: 240 6% 15%;
-    --muted-foreground: 30 5% 70%;
+    --muted: 220 8% 15%;
+    --muted-foreground: 40 8% 60%;
 
-    --accent: 240 8% 15%;
-    --accent-foreground: 45 20% 95%;
+    --accent: 220 10% 18%;
+    --accent-foreground: 40 20% 95%;
 
     --destructive: 0 60% 50%;
     --destructive-foreground: 0 0% 100%;
 
-    --border: 240 8% 18%;
-    --input: 240 8% 18%;
-    --ring: 265 60% 65%;
+    --border: 220 8% 18%;
+    --input: 220 8% 18%;
+    --ring: 270 50% 70%;
   }
 }
 
@@ -98,13 +98,13 @@
   @apply bg-muted-foreground/50;
 }
 
-/* Mystical gradient background */
+/* Premium Light Theme gradient background */
 .mystical-gradient {
-  background: linear-gradient(135deg, #fdf8f0 0%, #f3e8ff 50%, #e9d5ff 100%);
+  background: radial-gradient(circle at top, #f3e8ff 0%, #faf9f6 50%, #faf5f0 100%);
 }
 
 .mystical-gradient-dark {
-  background: linear-gradient(135deg, #1e1b4b 0%, #4c1d95 50%, #6b21a8 100%);
+  background: radial-gradient(circle at top, #1e1b4b 0%, #2d1b4e 50%, #1a1025 100%);
 }
 
 /* Gold gradient */
@@ -122,17 +122,17 @@
   background: radial-gradient(circle at center, rgba(167, 139, 250, 0.15) 0%, transparent 70%);
 }
 
-/* Glassmorphism */
+/* Glassmorphism - Premium Light Theme */
 .glass {
-  background: rgba(255, 255, 255, 0.7);
+  background: rgba(255, 255, 255, 0.85);
   backdrop-filter: blur(12px);
-  border: 1px solid rgba(255, 255, 255, 0.8);
+  border: 1px solid rgba(0, 0, 0, 0.05);
 }
 
 .glass-dark {
-  background: rgba(30, 27, 75, 0.7);
+  background: rgba(20, 20, 30, 0.85);
   backdrop-filter: blur(12px);
-  border: 1px solid rgba(167, 139, 250, 0.2);
+  border: 1px solid rgba(167, 139, 250, 0.15);
 }
 
 /* Glow effect */
@@ -266,18 +266,19 @@
   border: 2px solid rgba(212, 175, 55, 0.4);
 }
 
-/* Premium button */
+/* Premium button - Light Theme */
 .btn-premium {
-  background: linear-gradient(135deg, #d4af37 0%, #b8962e 100%);
-  color: white;
+  background: linear-gradient(135deg, #E6D5FF 0%, #C8A8FF 100%);
+  color: #1A1A1A;
   font-weight: 600;
   transition: all 0.3s ease;
+  border: 1px solid rgba(200, 168, 255, 0.3);
 }
 
 .btn-premium:hover {
-  background: linear-gradient(135deg, #e7c870 0%, #d4af37 100%);
-  box-shadow: 0 10px 30px rgba(212, 175, 55, 0.4);
-  transform: translateY(-2px);
+  background: linear-gradient(135deg, #C8A8FF 0%, #A78BFA 100%);
+  box-shadow: 0 10px 30px rgba(167, 139, 250, 0.3);
+  transform: scale(1.03);
 }
 
 /* Soft shadow */
@@ -311,8 +312,8 @@
   @apply bg-muted-foreground/50;
 }
 
-/* Focus ring */
+/* Focus ring - Light Theme */
 .focus-ring:focus {
   outline: none;
-  box-shadow: 0 0 0 3px rgba(167, 139, 250, 0.3);
+  box-shadow: 0 0 0 3px rgba(167, 139, 250, 0.2), 0 0 20px rgba(167, 139, 250, 0.15);
 }
