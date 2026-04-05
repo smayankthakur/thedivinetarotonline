@@ -1,121 +1,102 @@
 'use client'
 
 import { motion } from 'framer-motion'
-import { Sparkles, HelpCircle, MessageCircle, Star, CheckCircle } from 'lucide-react'
+import { Sparkles, HelpCircle, Shield, MessageCircle, BookOpen } from 'lucide-react'
 import Link from 'next/link'
 import { Button } from '@/components/ui/button'
 
 const faqs = [
   {
-    question: "What is tarot reading?",
-    answer: "Tarot reading is a form of spiritual guidance that uses a deck of 78 cards to gain insight into past, present, and future situations. Each card carries symbolic meaning and when laid out in a spread, they create a narrative that offers clarity and perspective on your questions and life circumstances."
+    question: "How does a tarot reading work?",
+    answer: "A tarot reading is a collaborativeconversation. You share what's on your mind or what questions you have, and I draw cards and share what insights come through. It's not about predicting the future — it's about helping you see your situation from fresh angles and find clarity."
   },
   {
-    question: "How accurate is it?",
-    answer: "Our AI-powered readings are designed to provide thoughtful, intuitive guidance based on the traditional meanings of the cards combined with modern understanding. The accuracy often depends on the clarity of your question and your openness to receiving the messages. Many find the insights surprisingly relevant to their current situations."
+    question: "Is my information kept private?",
+    answer: "Absolutely. Your readings and conversations are completely confidential. I don't share any personal information, and this is a judgment-free space where you can be honest about what's going on in your life."
   },
   {
-    question: "Is this free?",
-    answer: "Yes! You can start with free readings and chat with Ginni at no cost. We also offer optional premium sessions for those seeking deeper, more personalized guidance."
+    question: "What can I ask during a reading?",
+    answer: "Anything! Common questions include guidance onrelationships, career moves, life transitions, or just general direction. Some people come with specific questions, others just want to explore what's feeling off. There's no wrong way to approach tarot."
   },
   {
-    question: "Can I ask multiple questions?",
-    answer: "Absolutely! You can ask as many questions as you like. Each reading is unique and the cards respond to whatever is most relevant in your life at that moment. Some prefer to focus on one major question, while others explore multiple areas."
+    question: "Do I need to know tarot to do a reading?",
+    answer: "Not at all. You don't need any experience with tarot. Just come with an open mind and a genuine question or curiosity. I'll guide you through the rest."
   },
   {
-    question: "How does Ginni work?",
-    answer: "Ginni is your AI spiritual companion, trained on the ancient wisdom of tarot and modern psychological insights. When you ask a question, she draws on the card meanings and provides personalized interpretations that speak directly to your unique situation and energy."
-  },
-  {
-    question: "What if I'm new to tarot?",
-    answer: "That's perfectly fine! There's no need for any prior experience. Simply hold a question in your mind, and let Ginni guide you through the reading. The cards speak to everyone, regardless of familiarity with tarot."
+    question: "Will I get a clear answer or prediction?",
+    answer: "Tarot isn't about telling you what will definitely happen. It's about helping you see paths you might not have considered and honoring your own intuition. You'll leave with insight, not guarantees — and often more clarity than you expected."
   },
   {
     question: "Can I get a reading for someone else?",
-    answer: "Readings are most powerful when done for yourself, as they connect directly to your energy and intuition. We recommend focusing on your own questions and journey."
-  },
-  {
-    question: "How often should I get a reading?",
-    answer: "There's no set rule! Some prefer daily check-ins for guidance, while others come during important life decisions or transitions. Trust your intuition—when you feel called to seek guidance, that's the right time."
+    answer: "Readings work best when done for yourself, as they connect directly to your energy and intuition. I'd recommend focusing on your own questions and journey."
   }
 ]
 
 export default function FAQPage() {
   return (
-    <div className="min-h-screen mystical-gradient relative overflow-hidden">
-      <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        <motion.div 
-          className="absolute top-0 left-1/4 w-96 h-96 rounded-full bg-primary/5 blur-3xl"
-          animate={{ x: [0, 50, 0], y: [0, -30, 0] }}
-          transition={{ duration: 10, repeat: Infinity }}
-        />
-        <motion.div 
-          className="absolute bottom-0 right-1/4 w-80 h-80 rounded-full bg-purple-400/5 blur-3xl"
-          animate={{ x: [0, -40, 0], y: [0, 40, 0] }}
-          transition={{ duration: 8, repeat: Infinity }}
-        />
-      </div>
-
-      <div className="container relative z-10 py-16 px-4">
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="text-center mb-16"
-        >
-          <motion.div 
-            className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-gradient-to-br from-primary/20 to-purple-400/20 mb-6"
-            animate={{ scale: [1, 1.1, 1] }}
-            transition={{ duration: 2, repeat: Infinity }}
+    <div className="min-h-screen bg-white">
+      <section className="py-20 px-6 bg-gradient-to-b from-white to-[#F9FAFB]">
+        <div className="max-w-3xl mx-auto text-center">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6 }}
           >
-            <HelpCircle className="w-8 h-8 text-primary" />
+            <motion.div 
+              className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-[#A78BFA]/10 mb-6"
+              animate={{ scale: [1, 1.1, 1] }}
+              transition={{ duration: 2, repeat: Infinity }}
+            >
+              <HelpCircle className="w-8 h-8 text-[#A78BFA]" />
+            </motion.div>
+            <h1 className="text-4xl font-semibold text-gray-900 mb-4">
+              Frequently Asked Questions
+            </h1>
+            <p className="text-xl text-gray-600">
+              Common questions about tarot readings
+            </p>
           </motion.div>
-          <h1 className="text-3xl md:text-4xl font-serif font-bold mb-4">
-            Frequently Asked Questions
-          </h1>
-          <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-            Find answers to common questions about tarot readings and our services
-          </p>
-        </motion.div>
+        </div>
+      </section>
 
+      <section className="py-16 px-6">
         <div className="max-w-3xl mx-auto space-y-4">
           {faqs.map((faq, index) => (
             <motion.div
               key={index}
               initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
               transition={{ delay: index * 0.1 }}
-              className="p-6 rounded-2xl bg-card/80 backdrop-blur-sm border border-border/50 glass"
+              className="p-6 rounded-xl border border-gray-200 bg-white"
             >
-              <h3 className="text-lg font-semibold mb-3 flex items-start gap-3">
-                <span className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center flex-shrink-0 mt-0.5">
-                  <Sparkles className="w-4 h-4 text-primary" />
+              <h3 className="text-lg font-semibold text-gray-900 mb-3 flex items-start gap-3">
+                <span className="w-8 h-8 rounded-full bg-[#A78BFA]/10 flex items-center justify-center flex-shrink-0">
+                  <Sparkles className="w-4 h-4 text-[#A78BFA]" />
                 </span>
                 {faq.question}
               </h3>
-              <p className="text-muted-foreground leading-relaxed pl-11">
+              <p className="text-gray-600 leading-relaxed pl-11">
                 {faq.answer}
               </p>
             </motion.div>
           ))}
         </div>
+      </section>
 
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.5 }}
-          className="text-center mt-16"
-        >
-          <p className="text-muted-foreground mb-6">
-            Still have questions? Let's talk.
+      <section className="py-16 px-6 bg-[#F9FAFB]">
+        <div className="max-w-xl mx-auto text-center">
+          <p className="text-gray-600 mb-6">
+            Still have questions? Feel free to reach out.
           </p>
-          <Button asChild className="btn-premium rounded-full px-8">
-            <Link href="/booking">
-              <MessageCircle className="w-4 h-4 mr-2" />
-              Get in Touch
+          <Button asChild className="px-8 py-6 bg-gradient-to-r from-[#A78BFA] to-[#C4B5FD] text-white rounded-full">
+            <Link href="/contact">
+              <MessageCircle className="w-5 h-5 mr-2" />
+              Contact Ginni
             </Link>
           </Button>
-        </motion.div>
-      </div>
+        </div>
+      </section>
     </div>
   )
 }

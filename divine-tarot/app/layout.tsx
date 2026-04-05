@@ -19,41 +19,40 @@ const playfair = Playfair_Display({
 
 export const metadata: Metadata = {
   title: {
-    default: 'Divine Tarot - AI-Powered Spiritual Guidance',
-    template: '%s | Divine Tarot',
+    default: 'The Divine Tarot - Personal Tarot Readings',
+    template: '%s | The Divine Tarot',
   },
   description:
-    'Connect with certified tarot readers and get AI-powered spiritual guidance. Experience personalized readings, live sessions, and spiritual products.',
+    'Connect with Ginni for personal tarot readings, clarity, and spiritual guidance. Book a session and discover what the cards have to say about your journey.',
   keywords: [
     'tarot',
     'tarot reading',
     'spiritual guidance',
-    'ai tarot',
-    'live tarot',
+    'tarot reader',
     'psychic',
     'spiritual advisor',
     'divination',
   ],
   authors: [
     {
-      name: 'Divine Tarot Team',
+      name: 'Ginni - Divine Tarot Reader',
     },
   ],
-  creator: 'Divine Tarot',
+  creator: 'The Divine Tarot',
   openGraph: {
     type: 'website',
     locale: 'en_US',
     url: 'https://divinetarot.com',
-    title: 'Divine Tarot - AI-Powered Spiritual Guidance',
+    title: 'The Divine Tarot - Personal Tarot Readings',
     description:
-      'Connect with certified tarot readers and get AI-powered spiritual guidance.',
-    siteName: 'Divine Tarot',
+      'Connect with Ginni for personal tarot readings and spiritual guidance.',
+    siteName: 'The Divine Tarot',
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Divine Tarot - AI-Powered Spiritual Guidance',
+    title: 'The Divine Tarot - Personal Tarot Readings',
     description:
-      'Connect with certified tarot readers and get AI-powered spiritual guidance.',
+      'Connect with Ginni for personal tarot readings and spiritual guidance.',
     creator: '@divinetarot',
   },
   icons: {

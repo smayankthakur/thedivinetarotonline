@@ -3,9 +3,8 @@
 import { useState } from 'react'
 import Link from 'next/link'
 import { motion } from 'framer-motion'
-import { Sparkles, Star, Heart, ArrowRight, MessageCircle, BookOpen, ChevronRight, Sparkle } from 'lucide-react'
+import { Sparkles, Heart, ArrowRight, MessageCircle, BookOpen, ChevronRight, Star } from 'lucide-react'
 import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
 
 const fadeInUp = {
   initial: { opacity: 0, y: 20 },
@@ -25,7 +24,7 @@ function FloatingOrbs() {
   return (
     <div className="absolute inset-0 overflow-hidden pointer-events-none">
       <motion.div 
-        className="absolute top-1/4 left-1/4 w-64 h-64 rounded-full bg-primary/10 blur-3xl"
+        className="absolute top-1/4 left-1/4 w-64 h-64 rounded-full bg-[#A78BFA]/10 blur-3xl"
         animate={{ 
           x: [0, 30, 0],
           y: [0, -20, 0],
@@ -34,7 +33,7 @@ function FloatingOrbs() {
         transition={{ duration: 8, repeat: Infinity, ease: "easeInOut" }}
       />
       <motion.div 
-        className="absolute top-1/3 right-1/4 w-48 h-48 rounded-full bg-purple-400/10 blur-3xl"
+        className="absolute top-1/3 right-1/4 w-48 h-48 rounded-full bg-[#C4B5FD]/10 blur-3xl"
         animate={{ 
           x: [0, -20, 0],
           y: [0, 30, 0],
@@ -42,112 +41,52 @@ function FloatingOrbs() {
         }}
         transition={{ duration: 6, repeat: Infinity, ease: "easeInOut", delay: 1 }}
       />
-      <motion.div 
-        className="absolute bottom-1/4 left-1/3 w-56 h-56 rounded-full bg-amber-300/10 blur-3xl"
-        animate={{ 
-          x: [0, 20, 0],
-          y: [0, -30, 0],
-          scale: [1, 1.15, 1]
-        }}
-        transition={{ duration: 7, repeat: Infinity, ease: "easeInOut", delay: 2 }}
-      />
     </div>
   )
 }
 
-function TarotCardFloat({ delay }: { delay: number }) {
-  return (
-    <motion.div
-      className="absolute w-16 h-24 rounded-lg border-2 border-gold-400/30 bg-gradient-to-br from-ivory to-lavender-100 shadow-lg"
-      initial={{ opacity: 0, y: 100, rotate: -15 }}
-      animate={{ 
-        opacity: [0.3, 0.6, 0.3],
-        y: [100, 80, 100],
-        rotate: [-15, -10, -15]
-      }}
-      transition={{ 
-        duration: 4,
-        repeat: Infinity,
-        ease: "easeInOut",
-        delay 
-      }}
-    />
-  )
-}
-
-function openChat() {
-  const event = new CustomEvent('openGinniChat')
-  window.dispatchEvent(event)
-}
-
 export default function HomePage() {
-  const [question, setQuestion] = useState('')
-
   const steps = [
     {
       icon: MessageCircle,
-      title: "Ask Your Question",
-      description: "Hold a specific question in your mind. The more focused your intention, the clearer the guidance."
+      title: "Share What's on Your Mind",
+      description: "Tell Ginni what you're going through or what questions you have."
     },
     {
       icon: Sparkles,
-      title: "Connect with Ginni",
-      description: "Our AI spiritual companion draws on tarot wisdom to provide personalized insights for you."
+      title: "Receive Personal Guidance",
+      description: "Get intuitive insights drawn from traditional tarot wisdom and real understanding."
     },
     {
-      icon: BookOpen,
-      title: "Receive Your Guidance",
-      description: "Get a personalized interpretation that speaks directly to your unique situation and path."
-    }
-  ]
-
-  const articles = [
-    {
-      category: "Love",
-      title: "Why You Keep Attracting the Wrong People",
-      excerpt: "The patterns in your love life are trying to teach you something important about yourself...",
-      readTime: "5 min read"
-    },
-    {
-      category: "Spirit",
-      title: "What The Universe Wants You To Know Right Now",
-      excerpt: "There's a message waiting for you. The cards reveal it's about releasing what no longer serves...",
-      readTime: "4 min read"
-    },
-    {
-      category: "Career",
-      title: "Finding Your True Purpose",
-      excerpt: "Your professional path isn't about success—it's about alignment with your soul's calling...",
-      readTime: "6 min read"
+      icon: Heart,
+      title: "Find Clarity & Direction",
+      description: "Walk away with clarity on your path and confidence in your next steps."
     }
   ]
 
   const testimonials = [
     {
-      quote: "The reading felt like talking to a wise friend who truly understood my journey.",
+      quote: "Ginni helped me see things clearly during a confusing time in my life. Her readings feel personal, not automated.",
       author: "Sarah M.",
-      role: "Artist"
+      role: "Seeker"
     },
     {
-      quote: "Incredibly intuitive. The cards captured exactly what I was going through.",
+      quote: "I've tried other tarot apps, but this feels different. There's real care and intuition here.",
       author: "James K.",
-      role: "Teacher"
+      role: "Seeker"
     },
     {
-      quote: "I've never felt so seen and understood. The guidance was exactly what I needed.",
+      quote: "Ginni creates such a safe, judgment-free space. I always feel heard and understood.",
       author: "Elena R.",
-      role: "Writer"
+      role: "Seeker"
     }
   ]
 
   return (
     <div className="relative overflow-hidden">
-      <section className="relative min-h-[90vh] flex items-center justify-center mystical-gradient">
+      {/* Hero Section */}
+      <section className="relative min-h-[85vh] flex items-center justify-center bg-gradient-to-b from-white to-[#F9FAFB]">
         <FloatingOrbs />
-        
-        <TarotCardFloat delay={0} />
-        <TarotCardFloat delay={1.5} />
-        <TarotCardFloat delay={3} />
         
         <motion.div 
           className="container relative z-10 px-4 py-20"
@@ -156,90 +95,51 @@ export default function HomePage() {
           variants={staggerContainer}
         >
           <div className="max-w-3xl mx-auto text-center space-y-8">
-            <motion.div variants={fadeInUp} className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-lavender-100/50 backdrop-blur-sm border border-lavender-200/50">
-              <Sparkle className="w-4 h-4 text-amber-500" />
-              <span className="text-sm text-foreground">AI-Powered Spiritual Guidance</span>
+            <motion.div variants={fadeInUp} className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-[#A78BFA]/10 border border-[#A78BFA]/20">
+              <Sparkles className="w-4 h-4 text-[#A78BFA]" />
+              <span className="text-sm text-gray-700">Personal Tarot Readings</span>
             </motion.div>
             
             <motion.h1 
               variants={fadeInUp}
-              className="text-4xl md:text-6xl lg:text-7xl font-serif font-bold text-foreground leading-tight"
+              className="text-4xl md:text-5xl lg:text-6xl font-semibold text-gray-900 leading-tight"
             >
-              Ask Your Question.{' '}
-              <span className="text-primary">Let the Cards Reveal the Truth.</span>
+              Connect with a real tarot reader for{' '}
+              <span className="text-[#A78BFA]">guidance, clarity, and peace.</span>
             </motion.h1>
             
             <motion.p 
               variants={fadeInUp}
-              className="text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto"
+              className="text-lg md:text-xl text-gray-600 max-w-2xl mx-auto"
             >
-              Sometimes life feels overwhelming. The cards offer clarity, comfort, and direction—whenever you need it.
+              Sometimes life feels overwhelming. Let Ginni help you find clarity and direction through personal tarot readings.
             </motion.p>
 
-            <motion.div variants={fadeInUp} className="flex flex-col sm:flex-row gap-4 justify-center items-center max-w-lg mx-auto">
-              <Input
-                type="text"
-                placeholder="Type your question here..."
-                value={question}
-                onChange={(e) => setQuestion(e.target.value)}
-                className="h-14 text-lg bg-white border border-border shadow-soft focus:ring-2 focus:ring-primary/30"
-              />
-              <Button onClick={openChat} size="lg" className="h-14 px-8 btn-premium text-lg rounded-2xl">
-                Start Your Reading
+            <motion.div variants={fadeInUp} className="flex flex-col sm:flex-row gap-4 justify-center">
+              <Button asChild size="lg" className="px-8 py-6 text-base bg-gradient-to-r from-[#A78BFA] to-[#C4B5FD] text-white rounded-full hover:scale-105 transition-transform">
+                <Link href="/booking">
+                  Book a Reading
+                  <ArrowRight className="w-5 h-5 ml-2" />
+                </Link>
+              </Button>
+              <Button asChild variant="outline" size="lg" className="px-8 py-6 text-base rounded-full border-gray-300 text-gray-700 hover:bg-gray-50">
+                <Link href="/about">
+                  Learn More
+                </Link>
               </Button>
             </motion.div>
 
-            <motion.p variants={fadeInUp} className="text-sm text-muted-foreground">
-              Free to try • Instant guidance • Available 24/7
+            <motion.p variants={fadeInUp} className="text-sm text-gray-500">
+              Private & confidential • Judgment-free space
             </motion.p>
           </div>
         </motion.div>
 
-        <div className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-background to-transparent" />
+        <div className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-[#F9FAFB] to-transparent" />
       </section>
 
-      <section className="py-24 bg-background">
-        <div className="container px-4">
-          <motion.div 
-            className="max-w-4xl mx-auto flex flex-col md:flex-row items-center gap-12"
-            initial={{ opacity: 0, y: 40 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.8 }}
-          >
-            <div className="relative">
-              <div className="w-64 h-64 rounded-full bg-gradient-to-br from-lavender-100 to-lavender-200/50 flex items-center justify-center animate-breathe">
-                <div className="w-56 h-56 rounded-full bg-gradient-to-br from-white to-lavender-50 border-4 border-gold-300/50 shadow-soft overflow-hidden">
-                  <div className="w-full h-full bg-gradient-to-br from-lavender-50 to-white flex items-center justify-center">
-                    <Sparkles className="w-16 h-16 text-primary/50" />
-                  </div>
-                </div>
-              </div>
-              <motion.div 
-                className="absolute -bottom-4 -right-4 w-12 h-12 rounded-full bg-gradient-to-r from-gold-400 to-gold-500 flex items-center justify-center shadow-lg"
-                animate={{ scale: [1, 1.1, 1] }}
-                transition={{ duration: 2, repeat: Infinity }}
-              >
-                <Sparkles className="w-6 h-6 text-white" />
-              </motion.div>
-            </div>
-
-            <div className="flex-1 text-center md:text-left space-y-6">
-              <h2 className="text-3xl md:text-4xl font-serif font-bold">
-                Guided by your personal <span className="text-primary">AI Tarot Reader</span>
-              </h2>
-              <p className="text-lg text-muted-foreground leading-relaxed">
-                Imagine having a spiritual guide available anytime, who listens without judgment and answers with wisdom. Our AI understands the ancient language of the cards and speaks to your unique journey with compassion and insight.
-              </p>
-              <Button onClick={openChat} className="btn-premium rounded-full px-8">
-                Start Your Reading
-              </Button>
-            </div>
-          </motion.div>
-        </div>
-      </section>
-
-      <section className="py-24 bg-gradient-to-b from-background to-muted/30">
+      {/* How It Works */}
+      <section className="py-20 bg-white">
         <div className="container px-4">
           <motion.div 
             className="text-center mb-16"
@@ -247,100 +147,37 @@ export default function HomePage() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
           >
-            <h2 className="text-3xl md:text-4xl font-serif font-bold mb-4">
-              How Your Reading Works
+            <h2 className="text-3xl md:text-4xl font-semibold text-gray-900 mb-4">
+              How a Reading Works
             </h2>
-            <p className="text-muted-foreground max-w-xl mx-auto">
-              Three simple steps to receive the guidance you seek
+            <p className="text-gray-600 max-w-xl mx-auto">
+              Three simple steps to receive personal guidance
             </p>
           </motion.div>
 
-          <div className="grid md:grid-cols-3 gap-8 max-w-5xl mx-auto">
+          <div className="grid md:grid-cols-3 gap-8 max-w-4xl mx-auto">
             {steps.map((step, index) => (
               <motion.div
                 key={step.title}
-                className="relative p-8 rounded-3xl bg-card border border-border/50 glass hover:border-primary/30 transition-colors group"
-                initial={{ opacity: 0, y: 30 }}
+                className="text-center p-8"
+                initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
-                transition={{ delay: index * 0.2 }}
+                transition={{ delay: index * 0.15 }}
               >
-                <div className="absolute -top-4 -left-4 w-10 h-10 rounded-full bg-gradient-to-r from-lavender-400 to-lavender-500 flex items-center justify-center text-white font-bold text-lg shadow-lg">
-                  {index + 1}
+                <div className="w-16 h-16 rounded-2xl bg-[#A78BFA]/10 flex items-center justify-center mx-auto mb-6">
+                  <step.icon className="w-8 h-8 text-[#A78BFA]" />
                 </div>
-                
-                <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-lavender-100 to-lavender-200 flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
-                  <step.icon className="w-8 h-8 text-primary" />
-                </div>
-                
-                <h3 className="text-xl font-serif font-semibold mb-3">{step.title}</h3>
-                <p className="text-muted-foreground leading-relaxed">{step.description}</p>
-
-                {index < steps.length - 1 && (
-                  <div className="hidden md:block absolute top-1/2 -right-4 transform -translate-y-1/2">
-                    <ChevronRight className="w-8 h-8 text-muted-foreground/30" />
-                  </div>
-                )}
+                <h3 className="text-lg font-semibold text-gray-900 mb-3">{step.title}</h3>
+                <p className="text-gray-600 leading-relaxed">{step.description}</p>
               </motion.div>
             ))}
           </div>
         </div>
       </section>
 
-      <section className="py-24 bg-muted/30">
-        <div className="container px-4">
-          <motion.div 
-            className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-12"
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-          >
-            <div>
-              <h2 className="text-3xl md:text-4xl font-serif font-bold mb-2">
-                Guidance for Your Journey
-              </h2>
-              <p className="text-muted-foreground">Insights for love, life, and purpose</p>
-            </div>
-            <Button asChild variant="outline" className="rounded-full px-6">
-              <Link href="/blog">View All Articles</Link>
-            </Button>
-          </motion.div>
-
-          <div className="grid md:grid-cols-3 gap-8">
-            {articles.map((article, index) => (
-              <motion.article
-                key={article.title}
-                className="group p-6 rounded-3xl bg-card border border-border/50 glass hover:border-primary/30 hover:shadow-soft transition-all cursor-pointer"
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ delay: index * 0.1 }}
-              >
-                <div className="flex items-center gap-3 mb-4">
-                  <span className="px-3 py-1 rounded-full text-xs font-medium bg-primary/10 text-primary">
-                    {article.category}
-                  </span>
-                  <span className="text-xs text-muted-foreground">{article.readTime}</span>
-                </div>
-                
-                <h3 className="text-xl font-serif font-semibold mb-3 group-hover:text-primary transition-colors">
-                  {article.title}
-                </h3>
-                
-                <p className="text-muted-foreground mb-4 line-clamp-2">
-                  {article.excerpt}
-                </p>
-                
-                <div className="flex items-center text-primary font-medium text-sm group-hover:gap-2 transition-all">
-                  Read more <ArrowRight className="w-4 h-4 ml-1" />
-                </div>
-              </motion.article>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      <section className="py-24 bg-background">
+      {/* Testimonials */}
+      <section className="py-20 bg-[#F9FAFB]">
         <div className="container px-4">
           <motion.div 
             className="text-center mb-16"
@@ -348,19 +185,16 @@ export default function HomePage() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
           >
-            <h2 className="text-3xl md:text-4xl font-serif font-bold mb-4">
+            <h2 className="text-3xl md:text-4xl font-semibold text-gray-900 mb-4">
               What Seekers Are Saying
             </h2>
-            <p className="text-muted-foreground max-w-xl mx-auto">
-              Real experiences from our community
-            </p>
           </motion.div>
 
           <div className="grid md:grid-cols-3 gap-8 max-w-5xl mx-auto">
             {testimonials.map((testimonial, index) => (
               <motion.div
                 key={testimonial.author}
-                className="p-8 rounded-3xl bg-gradient-to-br from-card to-muted/50 border border-border/50"
+                className="p-8 bg-white rounded-2xl shadow-sm"
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
@@ -368,30 +202,22 @@ export default function HomePage() {
               >
                 <div className="flex gap-1 mb-4">
                   {[...Array(5)].map((_, i) => (
-                    <Star key={i} className="w-4 h-4 fill-amber-400 text-amber-400" />
+                    <Star key={i} className="w-4 h-4 fill-[#A78BFA] text-[#A78BFA]" />
                   ))}
                 </div>
-                
-                <p className="text-foreground mb-6 leading-relaxed italic">
+                <p className="text-gray-700 mb-6 leading-relaxed italic">
                   "{testimonial.quote}"
                 </p>
-                
-                <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 rounded-full bg-gradient-to-br from-lavender-200 to-lavender-300 flex items-center justify-center">
-                    <span className="text-foreground font-semibold">{testimonial.author[0]}</span>
-                  </div>
-                  <div>
-                    <p className="font-medium text-sm">{testimonial.author}</p>
-                    <p className="text-xs text-muted-foreground">{testimonial.role}</p>
-                  </div>
-                </div>
+                <p className="font-medium text-gray-900">{testimonial.author}</p>
+                <p className="text-sm text-gray-500">{testimonial.role}</p>
               </motion.div>
             ))}
           </div>
         </div>
       </section>
 
-      <section className="py-24 mystical-gradient relative overflow-hidden">
+      {/* CTA Section */}
+      <section className="py-20 bg-gradient-to-b from-white to-[#F9FAFB]">
         <FloatingOrbs />
         <div className="container px-4 relative z-10">
           <motion.div 
@@ -400,21 +226,17 @@ export default function HomePage() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
           >
-            <h2 className="text-3xl md:text-4xl font-serif font-bold">
+            <h2 className="text-3xl md:text-4xl font-semibold text-gray-900">
               Ready for Your Reading?
             </h2>
-            <p className="text-lg text-muted-foreground max-w-lg mx-auto">
-              Connect with the cards and discover what the universe has to say.
-              Your answers await.
+            <p className="text-lg text-gray-600 max-w-lg mx-auto">
+              Connect with Ginni and discover what the cards have to say about your journey.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Button onClick={openChat} size="lg" className="btn-premium rounded-full px-8">
-                Start Free Reading
-                <ArrowRight className="w-5 h-5 ml-2" />
-              </Button>
-              <Button asChild variant="outline" size="lg" className="rounded-full px-8 border-border text-foreground hover:bg-accent/50">
+              <Button asChild size="lg" className="px-8 py-6 text-base bg-gradient-to-r from-[#A78BFA] to-[#C4B5FD] text-white rounded-full">
                 <Link href="/booking">
-                  Book a Session
+                  Book a Reading
+                  <ArrowRight className="w-5 h-5 ml-2" />
                 </Link>
               </Button>
             </div>
