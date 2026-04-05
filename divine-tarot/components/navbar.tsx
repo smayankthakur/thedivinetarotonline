@@ -65,7 +65,7 @@ export function Navbar() {
             asChild
             className="hidden sm:flex rounded-full px-6 py-2.5 text-sm font-semibold bg-gradient-to-r from-[#A78BFA] to-[#C4B5FD] text-white shadow-md hover:scale-105 hover:shadow-lg transition-all duration-200"
           >
-            <Link href="/booking">
+            <Link href="/contact">
               Start Reading
             </Link>
           </Button>
