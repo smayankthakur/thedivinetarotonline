@@ -1,5 +1,5 @@
 import type { Metadata } from 'next'
-import { Inter, Playfair_Display } from 'next/font/google'
+import { Inter, Playfair_Display, Cinzel } from 'next/font/google'
 import { ThemeProvider } from '@/components/theme-provider'
 import { Navbar } from '@/components/navbar'
 import { Footer } from '@/components/footer'
@@ -17,13 +17,18 @@ const playfair = Playfair_Display({
   variable: '--font-serif',
 })
 
+const cinzel = Cinzel({
+  subsets: ['latin'],
+  variable: '--font-display',
+})
+
 export const metadata: Metadata = {
   title: {
     default: 'The Divine Tarot - Personal Tarot Readings',
     template: '%s | The Divine Tarot',
   },
   description:
-    'Connect with Ginni for personal tarot readings, clarity, and spiritual guidance. Book a session and discover what the cards have to say about your journey.',
+    'Connect with Bharti Singh for personal tarot readings, clarity, and spiritual guidance. Book a session and discover what the cards have to say about your journey.',
   keywords: [
     'tarot',
     'tarot reading',
@@ -35,7 +40,7 @@ export const metadata: Metadata = {
   ],
   authors: [
     {
-      name: 'Ginni - Divine Tarot Reader',
+      name: 'Bharti Singh - Divine Tarot Reader',
     },
   ],
   creator: 'The Divine Tarot',
@@ -45,14 +50,14 @@ export const metadata: Metadata = {
     url: 'https://divinetarot.com',
     title: 'The Divine Tarot - Personal Tarot Readings',
     description:
-      'Connect with Ginni for personal tarot readings and spiritual guidance.',
+      'Connect with Bharti Singh for personal tarot readings and spiritual guidance.',
     siteName: 'The Divine Tarot',
   },
   twitter: {
     card: 'summary_large_image',
     title: 'The Divine Tarot - Personal Tarot Readings',
     description:
-      'Connect with Ginni for personal tarot readings and spiritual guidance.',
+      'Connect with Bharti Singh for personal tarot readings and spiritual guidance.',
     creator: '@divinetarot',
   },
   icons: {
@@ -70,7 +75,7 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <body
-        className={`${inter.variable} ${playfair.variable} font-sans antialiased`}
+        className={`${inter.variable} ${playfair.variable} ${cinzel.variable} font-sans antialiased`}
       >
         <ThemeProvider
           attribute="class"

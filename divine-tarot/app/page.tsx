@@ -1,284 +1,215 @@
 'use client'
 
-import { useState } from 'react'
 import Link from 'next/link'
 import { motion } from 'framer-motion'
-import { Sparkles, Heart, ArrowRight, Shield, MessageCircle, BookOpen, ChevronRight, Star } from 'lucide-react'
+import { Sparkles, Heart, ArrowRight, Star, Sparkles as SparklesIcon } from 'lucide-react'
 import { Button } from '@/components/ui/button'
+import { FloatingOrbs, ParticleField, GlowingButton, FadeInSection, AnimatedCounter } from '@/components/animated/MysticalComponents'
 
 const fadeInUp = {
-  initial: { opacity: 0, y: 20 },
+  initial: { opacity: 0, y: 30 },
   animate: { opacity: 1, y: 0 },
-  transition: { duration: 0.6 }
+  transition: { duration: 0.8, ease: "easeOut" }
 }
 
 const staggerContainer = {
   animate: {
     transition: {
-      staggerChildren: 0.1
+      staggerChildren: 0.15
     }
   }
 }
 
-function FloatingOrbs() {
-  return (
-    <div className="absolute inset-0 overflow-hidden pointer-events-none">
-      <motion.div 
-        className="absolute top-1/4 left-1/4 w-64 h-64 rounded-full bg-[#A78BFA]/10 blur-3xl"
-        animate={{ 
-          x: [0, 30, 0],
-          y: [0, -20, 0],
-          scale: [1, 1.1, 1]
-        }}
-        transition={{ duration: 8, repeat: Infinity, ease: "easeInOut" }}
-      />
-      <motion.div 
-        className="absolute top-1/3 right-1/4 w-48 h-48 rounded-full bg-[#C4B5FD]/10 blur-3xl"
-        animate={{ 
-          x: [0, -20, 0],
-          y: [0, 30, 0],
-          scale: [1, 1.2, 1]
-        }}
-        transition={{ duration: 6, repeat: Infinity, ease: "easeInOut", delay: 1 }}
-      />
-    </div>
-  )
-}
-
 export default function HomePage() {
   return (
-    <div className="relative overflow-hidden">
+    <div className="relative overflow-hidden bg-gradient-to-b from-white via-[#FAF9FF] to-[#F5F3FF]">
       {/* Hero Section */}
-      <section className="relative min-h-[85vh] flex items-center justify-center bg-gradient-to-b from-white to-[#F9FAFB]">
+      <section className="relative min-h-[90vh] flex items-center">
         <FloatingOrbs />
+        <ParticleField />
         
-        <motion.div 
-          className="container relative z-10 px-4 py-20"
-          initial="initial"
-          animate="animate"
-          variants={staggerContainer}
-        >
-          <div className="max-w-3xl mx-auto text-center space-y-8">
-            <motion.div variants={fadeInUp} className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-[#A78BFA]/10 border border-[#A78BFA]/20">
-              <Sparkles className="w-4 h-4 text-[#A78BFA]" />
-              <span className="text-sm text-gray-700">Personal Tarot Readings</span>
-            </motion.div>
-            
-            <motion.h1 
-              variants={fadeInUp}
-              className="text-4xl md:text-5xl lg:text-6xl font-semibold text-gray-900 leading-tight"
-              style={{ fontFamily: 'Georgia, serif' }}
+        <div className="container relative z-10 px-4 py-20">
+          <div className="grid lg:grid-cols-2 gap-12 items-center max-w-6xl mx-auto">
+            {/* Left Side - Content */}
+            <motion.div 
+              className="text-center lg:text-left"
+              initial="initial"
+              animate="animate"
+              variants={staggerContainer}
             >
-              Find Clarity, Peace & Direction When You Need It Most
-            </motion.h1>
-            
-            <motion.p 
-              variants={fadeInUp}
-              className="text-lg md:text-xl text-gray-600 max-w-2xl mx-auto"
-            >
-              Connect with a real tarot reader and gently explore what's on your mind. Whether you're feeling uncertain, overwhelmed, or simply seeking guidance — you're not alone.
-            </motion.p>
+              <motion.div variants={fadeInUp} className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-[#A78BFA]/10 border border-[#A78BFA]/20 mb-6">
+                <SparklesIcon className="w-4 h-4 text-[#A78BFA]" />
+                <span className="text-sm text-gray-700">Personal Tarot Readings</span>
+              </motion.div>
+              
+              <motion.h1 
+                variants={fadeInUp}
+                className="text-4xl md:text-5xl lg:text-6xl font-semibold text-gray-900 leading-tight mb-6"
+                style={{ fontFamily: 'Playfair Display, Georgia, serif' }}
+              >
+                Your Answers Are Already Written in the Cards
+              </motion.h1>
+              
+              <motion.p 
+                variants={fadeInUp}
+                className="text-lg md:text-xl text-gray-600 max-w-xl mx-auto lg:mx-0 mb-8"
+              >
+                Ask your question and receive deeply personalised tarot guidance powered by intuitive intelligence
+              </motion.p>
 
-            <motion.div variants={fadeInUp} className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Button asChild size="lg" className="px-8 py-6 text-base bg-gradient-to-r from-[#A78BFA] to-[#C4B5FD] text-white rounded-full hover:scale-105 transition-transform">
-                <Link href="/booking">
-                  Start Your Personal Reading
-                  <ArrowRight className="w-5 h-5 ml-2" />
-                </Link>
-              </Button>
+              <motion.div variants={fadeInUp} className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
+                <GlowingButton>
+                  <Link href="/booking">
+                    Start Your Reading
+                    <ArrowRight className="w-5 h-5 ml-2" />
+                  </Link>
+                </GlowingButton>
+              </motion.div>
+
+              <motion.p variants={fadeInUp} className="text-sm text-gray-500 mt-6">
+                Private • Personal • Judgment-free
+              </motion.p>
             </motion.div>
 
-            <motion.p variants={fadeInUp} className="text-sm text-gray-500">
-              Private • Personal • Judgment-free
-            </motion.p>
+            {/* Right Side - Animated Tarot Reader */}
+            <motion.div 
+              className="hidden lg:block relative"
+              initial={{ opacity: 0, x: 30 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ duration: 1, delay: 0.3 }}
+            >
+              <div className="relative w-full aspect-square max-w-md mx-auto">
+                {/* Card spread behind */}
+                <motion.div
+                  className="absolute inset-0 flex items-center justify-center"
+                  animate={{ y: [0, -10, 0] }}
+                  transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
+                >
+                  <div className="relative w-64 h-80">
+                    {[0, 1, 2].map((i) => (
+                      <motion.div
+                        key={i}
+                        className="absolute w-32 h-48 rounded-xl bg-gradient-to-br from-[#1A1A2E] to-[#16213E] border-2 border-[#A78BFA]/30"
+                        style={{
+                          left: `${30 + i * 40}px`,
+                          top: `${20 + i * 20}px`,
+                          transform: `rotate(${i * 5 - 5}deg)`,
+                          zIndex: 3 - i
+                        }}
+                        animate={{ 
+                          y: [0, -5, 0],
+                        }}
+                        transition={{ duration: 3, repeat: Infinity, delay: i * 0.5 }}
+                      >
+                        <div className="w-full h-full flex items-center justify-center">
+                          <Sparkles className="w-8 h-8 text-[#A78BFA]/40" />
+                        </div>
+                      </motion.div>
+                    ))}
+                  </div>
+                </motion.div>
+
+                {/* Glowing aura */}
+                <motion.div
+                  className="absolute inset-0 rounded-full bg-[#A78BFA]/20 blur-3xl"
+                  animate={{ scale: [1, 1.1, 1] }}
+                  transition={{ duration: 4, repeat: Infinity }}
+                />
+              </div>
+            </motion.div>
           </div>
-        </motion.div>
-
-        <div className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-[#F9FAFB] to-transparent" />
-      </section>
-
-      {/* Section 2 - A Calm Introduction */}
-      <section className="py-24 bg-white">
-        <div className="container px-4">
-          <motion.div 
-            className="max-w-2xl mx-auto text-center"
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-          >
-            <h2 className="text-3xl md:text-4xl font-semibold text-gray-900 mb-8" style={{ fontFamily: 'Georgia, serif' }}>
-              Sometimes, life feels unclear.
-            </h2>
-            <div className="space-y-6 text-gray-600 leading-relaxed text-lg">
-              <p>
-                You may be searching for answers, trying to understand your emotions, or standing at a point where decisions feel heavy.
-              </p>
-              <p>
-                Tarot offers a quiet space to pause, reflect, and see things from a new perspective.
-              </p>
-              <p>
-                Here, you're not being told what will happen — you're being guided to understand what you already feel, but may not yet see clearly.
-              </p>
-            </div>
-          </motion.div>
         </div>
+
+        <div className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-[#F5F3FF] to-transparent" />
       </section>
 
-      {/* Section 3 - Meet Your Reader */}
-      <section className="py-24 bg-[#F9FAFB]">
-        <FloatingOrbs />
-        <div className="container px-4 relative z-10">
-          <motion.div 
-            className="max-w-2xl mx-auto text-center"
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-          >
-            <h2 className="text-3xl md:text-4xl font-semibold text-gray-900 mb-6" style={{ fontFamily: 'Georgia, serif' }}>
-              Meet Your Reader
-            </h2>
-            <h3 className="text-2xl md:text-3xl font-semibold text-gray-900 mb-8" style={{ fontFamily: 'Georgia, serif' }}>
-              Hi, I'm Bharti Singh.
-            </h3>
-            <div className="space-y-6 text-gray-600 leading-relaxed text-lg">
-              <p>
-                I offer intuitive tarot readings designed to help you reconnect with your thoughts, emotions, and direction.
-              </p>
-              <p>
-                My approach is simple — I listen, I understand, and I guide.
-              </p>
-              <p>
-                You don't need perfect questions. You just need to show up as you are.
-              </p>
-            </div>
-          </motion.div>
-        </div>
-      </section>
-
-      {/* Section 4 - How It Works */}
-      <section className="py-24 bg-white">
-        <div className="container px-4">
-          <motion.div 
-            className="text-center mb-16"
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-          >
-            <h2 className="text-3xl md:text-4xl font-semibold text-gray-900 mb-4" style={{ fontFamily: 'Georgia, serif' }}>
+      {/* How It Works */}
+      <section className="py-24 px-6 bg-white">
+        <div className="max-w-4xl mx-auto">
+          <FadeInSection>
+            <h2 className="text-3xl md:text-4xl font-semibold text-gray-900 mb-16 text-center" style={{ fontFamily: 'Playfair Display, Georgia, serif' }}>
               How It Works
             </h2>
-          </motion.div>
+          </FadeInSection>
 
-          <div className="grid md:grid-cols-3 gap-12 max-w-4xl mx-auto">
+          <div className="grid md:grid-cols-3 gap-8 relative">
+            {/* Connecting line */}
+            <div className="hidden md:block absolute top-1/2 left-0 right-0 h-0.5 bg-gradient-to-r from-[#A78BFA]/0 via-[#A78BFA]/30 to-[#A78BFA]/0 -translate-y-1/2" />
+
             {[
-              {
-                step: "1",
-                title: "Share What's On Your Mind",
-                description: "Tell me about your situation, your thoughts, or what's been bothering you."
-              },
-              {
-                step: "2",
-                title: "I Connect & Read the Cards",
-                description: "Using tarot and intuition, I explore the energy around your situation."
-              },
-              {
-                step: "3",
-                title: "You Receive Clarity & Guidance",
-                description: "You'll walk away with a clearer understanding and a sense of direction."
-              }
+              { step: "1", title: "Ask Your Question", description: "Share what's on your mind" },
+              { step: "2", title: "Draw Your Cards", description: "Select cards from the spread" },
+              { step: "3", title: "Receive Guidance", description: "Get personalized insights" }
             ].map((item, index) => (
-              <motion.div
-                key={item.title}
-                className="text-center"
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ delay: index * 0.15 }}
-              >
-                <div className="w-12 h-12 rounded-full bg-[#A78BFA] text-white flex items-center justify-center mx-auto mb-6 text-lg font-semibold">
-                  {item.step}
+              <FadeInSection key={item.title} delay={index * 0.2}>
+                <div className="relative text-center p-8 bg-white">
+                  <motion.div
+                    className="w-16 h-16 rounded-full bg-gradient-to-br from-[#A78BFA] to-[#C4B5FD] text-white flex items-center justify-center mx-auto mb-4 text-xl font-semibold shadow-lg"
+                    whileHover={{ scale: 1.1 }}
+                  >
+                    {item.step}
+                  </motion.div>
+                  <h3 className="text-lg font-semibold text-gray-900 mb-2">{item.title}</h3>
+                  <p className="text-gray-600">{item.description}</p>
                 </div>
-                <h3 className="text-lg font-semibold text-gray-900 mb-3">{item.title}</h3>
-                <p className="text-gray-600 leading-relaxed">{item.description}</p>
-              </motion.div>
+              </FadeInSection>
             ))}
           </div>
         </div>
       </section>
 
-      {/* Section 5 - Who This Is For */}
-      <section className="py-24 bg-[#F9FAFB]">
-        <div className="container px-4">
-          <motion.div 
-            className="max-w-2xl mx-auto text-center"
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-          >
-            <h2 className="text-3xl md:text-4xl font-semibold text-gray-900 mb-8" style={{ fontFamily: 'Georgia, serif' }}>
-              Who This Is For
+      {/* Trust Section */}
+      <section className="py-24 px-6 bg-gradient-to-b from-[#F5F3FF] to-white">
+        <div className="max-w-4xl mx-auto text-center">
+          <FadeInSection>
+            <h2 className="text-2xl md:text-3xl font-semibold text-gray-900 mb-12" style={{ fontFamily: 'Playfair Display, Georgia, serif' }}>
+              Trusted by seekers worldwide
             </h2>
-            
-            <div className="grid md:grid-cols-2 gap-4 mb-8">
-              {[
-                "Feeling confused or emotionally overwhelmed",
-                "Facing uncertainty in love or relationships",
-                "Struggling with decisions about your future",
-                "Looking for clarity, reassurance, or peace"
-              ].map((item, index) => (
+          </FadeInSection>
+
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-8 mb-16">
+            {[
+              { value: 10000, suffix: "+", label: "Readings Done" },
+              { value: 92, suffix: "%", label: "Clarity Reported" },
+              { value: 5000, suffix: "+", label: "Happy Seekers" },
+              { value: 4.9, suffix: "/5", label: "Average Rating" }
+            ].map((stat, index) => (
+              <FadeInSection key={stat.label} delay={index * 0.1}>
+                <div className="text-center">
+                  <AnimatedCounter end={stat.value} suffix={stat.suffix} />
+                  <p className="text-sm text-gray-600 mt-2">{stat.label}</p>
+                </div>
+              </FadeInSection>
+            ))}
+          </div>
+
+          <div className="grid md:grid-cols-3 gap-6">
+            {[
+              { quote: "The reading brought clarity I desperately needed. Truly transformative.", author: "Sarah M." },
+              { quote: "Beautiful experience. The cards spoke to exactly what I was going through.", author: "James K." },
+              { quote: "Felt like talking to a wise friend who truly understands.", author: "Elena R." }
+            ].map((testimonial, index) => (
+              <FadeInSection key={testimonial.author} delay={index * 0.15}>
                 <motion.div
-                  key={index}
-                  initial={{ opacity: 0, y: 20 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ delay: index * 0.1 }}
-                  className="flex items-center gap-3 p-4 bg-white border border-gray-100 rounded-xl"
+                  className="p-6 bg-white rounded-2xl shadow-sm border border-[#A78BFA]/10"
+                  whileHover={{ y: -5 }}
                 >
-                  <Heart className="w-5 h-5 text-[#A78BFA] flex-shrink-0" />
-                  <span className="text-gray-700">{item}</span>
+                  <div className="flex gap-1 mb-3">
+                    {[...Array(5)].map((_, i) => (
+                      <Star key={i} className="w-4 h-4 fill-[#A78BFA] text-[#A78BFA]" />
+                    ))}
+                  </div>
+                  <p className="text-gray-700 mb-4 italic">"{testimonial.quote}"</p>
+                  <p className="font-medium text-gray-900">{testimonial.author}</p>
                 </motion.div>
-              ))}
-            </div>
-
-            <p className="text-gray-600 text-lg">
-              If something has been weighing on your heart, this is a safe place to explore it.
-            </p>
-          </motion.div>
-        </div>
-      </section>
-
-      {/* Section 6 - Trust & Safety */}
-      <section className="py-24 bg-white">
-        <div className="container px-4">
-          <motion.div 
-            className="max-w-2xl mx-auto text-center"
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-          >
-            <Shield className="w-12 h-12 text-[#A78BFA] mx-auto mb-6" />
-            <h2 className="text-3xl md:text-4xl font-semibold text-gray-900 mb-8" style={{ fontFamily: 'Georgia, serif' }}>
-              Trust & Safety
-            </h2>
-            <p className="text-gray-600 text-lg mb-4">
-              Your experience here is:
-            </p>
-            <div className="flex flex-wrap justify-center gap-4 mb-8">
-              {["Completely private", "Judgment-free", "Handled with care and respect"].map((item, index) => (
-                <span key={index} className="px-4 py-2 bg-[#A78BFA]/10 text-[#A78BFA] rounded-full text-sm font-medium">
-                  {item}
-                </span>
-              ))}
-            </div>
-            <p className="text-gray-600 text-lg">
-              This is your space to open up freely and honestly.
-            </p>
-          </motion.div>
+              </FadeInSection>
+            ))}
+          </div>
         </div>
       </section>
 
       {/* Final CTA Section */}
-      <section className="py-24 bg-gradient-to-b from-white to-[#F9FAFB]">
+      <section className="py-24 px-6 bg-gradient-to-b from-white to-[#F5F3FF]">
         <FloatingOrbs />
         <div className="container px-4 relative z-10">
           <motion.div 
@@ -286,27 +217,22 @@ export default function HomePage() {
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
+            transition={{ duration: 0.8 }}
           >
-            <h2 className="text-3xl md:text-4xl font-semibold text-gray-900" style={{ fontFamily: 'Georgia, serif' }}>
-              You don't need to have everything figured out.
+            <h2 className="text-3xl md:text-4xl font-semibold text-gray-900" style={{ fontFamily: 'Playfair Display, Georgia, serif' }}>
+              The clarity you seek is one step away
             </h2>
-            <p className="text-lg text-gray-600 max-w-lg mx-auto">
-              Sometimes, a little clarity is all it takes to move forward.
+            <p className="text-lg text-gray-600">
+              Let the cards guide you to the answers you already hold within.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Button asChild size="lg" className="px-8 py-6 text-base bg-gradient-to-r from-[#A78BFA] to-[#C4B5FD] text-white rounded-full hover:scale-105 transition-transform">
+              <GlowingButton>
                 <Link href="/booking">
-                  Book Your Personal Reading
-                  <ArrowRight className="w-5 h-5 ml-2" />
+                  Reveal Your Reading
+                  <SparklesIcon className="w-5 h-5 ml-2" />
                 </Link>
-              </Button>
+              </GlowingButton>
             </div>
-            <p className="text-gray-500 pt-4">
-              I'll be here to listen and guide you.
-            </p>
-            <p className="text-lg font-semibold text-gray-900" style={{ fontFamily: 'Georgia, serif' }}>
-              — Bharti Singh
-            </p>
           </motion.div>
         </div>
       </section>
