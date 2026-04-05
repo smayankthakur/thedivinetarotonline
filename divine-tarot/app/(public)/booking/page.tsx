@@ -1,258 +1,216 @@
 'use client'
 
-import { useState } from 'react'
 import { motion } from 'framer-motion'
-import { Calendar, Clock, MessageCircle, Send, Sparkles, CheckCircle } from 'lucide-react'
+import { Sparkles, Eye, Shield, Heart, MessageCircle, ArrowRight, Star } from 'lucide-react'
 import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
-
-const topics = [
-  { value: 'love', label: 'Love' },
-  { value: 'career', label: 'Career' },
-  { value: 'general', label: 'General' },
-]
 
 export default function BookingPage() {
-  const [formData, setFormData] = useState({
-    fullName: '',
-    email: '',
-    preferredDate: '',
-    preferredTime: '',
-    topic: '',
-    message: '',
-  })
-  const [isSubmitting, setIsSubmitting] = useState(false)
-  const [isSuccess, setIsSuccess] = useState(false)
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault()
-    setIsSubmitting(true)
-
-    await new Promise((resolve) => setTimeout(resolve, 1500))
-    setIsSubmitting(false)
-    setIsSuccess(true)
+  const handleBooking = () => {
+    window.location.href = 'https://sitelytc.com/booking'
   }
 
-  const handleChange = (field: string, value: string) => {
-    setFormData((prev) => ({ ...prev, [field]: value }))
-  }
+  const benefits = [
+    {
+      icon: Eye,
+      title: 'Clarity & Guidance',
+      description: 'Receive intuitive insights tailored to your unique journey and questions.'
+    },
+    {
+      icon: Shield,
+      title: 'Safe & Private Space',
+      description: 'Your readings and conversations remain completely confidential.'
+    },
+    {
+      icon: Heart,
+      title: 'Personalized Insights',
+      description: 'Every reading is crafted specifically for your situation and energy.'
+    }
+  ]
 
-  if (isSuccess) {
-    return (
-      <div className="min-h-screen mystical-gradient relative overflow-hidden">
-        <div className="absolute inset-0 overflow-hidden pointer-events-none">
-          <motion.div 
-            className="absolute top-1/4 left-1/4 w-96 h-96 rounded-full bg-primary/5 blur-3xl"
-            animate={{ x: [0, 50, 0], y: [0, -30, 0] }}
-            transition={{ duration: 10, repeat: Infinity }}
-          />
-          <motion.div 
-            className="absolute bottom-0 right-1/4 w-80 h-80 rounded-full bg-purple-400/5 blur-3xl"
-            animate={{ x: [0, -40, 0], y: [0, 40, 0] }}
-            transition={{ duration: 8, repeat: Infinity }}
-          />
-        </div>
+  const steps = [
+    {
+      step: '01',
+      title: 'Share Your Situation',
+      description: 'Tell Ginni what\'s on your mind or what guidance you seek.'
+    },
+    {
+      step: '02',
+      title: 'Ginni Connects with Your Energy',
+      description: 'Using ancient tarot wisdom and intuitive understanding.'
+    },
+    {
+      step: '03',
+      title: 'Receive Clarity & Direction',
+      description: 'Get meaningful insights that help you move forward with confidence.'
+    }
+  ]
 
-        <div className="container relative z-10 py-20 px-4">
-          <motion.div 
-            initial={{ opacity: 0, scale: 0.9 }}
-            animate={{ opacity: 1, scale: 1 }}
-            className="max-w-md mx-auto text-center"
+  return (
+    <div className="min-h-screen bg-white">
+      {/* Hero Section */}
+      <section className="relative py-20 md:py-28 px-6 overflow-hidden">
+        {/* Background */}
+        <div className="absolute inset-0 bg-gradient-to-b from-[#F9FAFB] to-white" />
+        <motion.div 
+          className="absolute top-20 left-1/4 w-72 h-72 rounded-full bg-[#A78BFA]/10 blur-3xl"
+          animate={{ x: [0, 30, 0], y: [0, -20, 0] }}
+          transition={{ duration: 8, repeat: Infinity }}
+        />
+        <motion.div 
+          className="absolute bottom-10 right-1/4 w-56 h-56 rounded-full bg-[#C4B5FD]/10 blur-3xl"
+          animate={{ x: [0, -20, 0], y: [0, 20, 0] }}
+          transition={{ duration: 6, repeat: Infinity }}
+        />
+
+        <div className="relative z-10 max-w-3xl mx-auto text-center">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6 }}
           >
-            <motion.div
-              initial={{ scale: 0 }}
-              animate={{ scale: 1 }}
-              transition={{ delay: 0.2, type: 'spring' }}
-              className="w-24 h-24 rounded-full bg-gradient-to-br from-primary/20 to-purple-400/20 flex items-center justify-center mx-auto mb-6"
+            <motion.div 
+              className="inline-flex items-center justify-center w-14 h-14 rounded-full bg-gradient-to-br from-[#A78BFA]/20 to-[#C4B5FD]/20 mb-6"
+              animate={{ scale: [1, 1.05, 1] }}
+              transition={{ duration: 2, repeat: Infinity }}
             >
-              <CheckCircle className="w-12 h-12 text-primary" />
+              <Sparkles className="w-7 h-7 text-[#A78BFA]" />
             </motion.div>
             
-            <h1 className="text-3xl md:text-4xl font-serif font-bold mb-4">
-              Request Received
+            <h1 className="text-4xl md:text-5xl font-semibold text-[#111827] mb-4 leading-tight">
+              Book Your Personal Reading
             </h1>
-            <p className="text-lg text-muted-foreground mb-8">
-              Your request has been received. We will connect with you soon 💜
+            <p className="text-lg text-[#6B7280] max-w-xl mx-auto mb-8">
+              Let Ginni guide you with clarity, intuition, and calm. Your personalized tarot experience awaits.
             </p>
-            
+
             <Button 
-              onClick={() => setIsSuccess(false)}
-              variant="outline"
-              className="rounded-full"
+              onClick={handleBooking}
+              className="inline-flex items-center gap-2 px-8 py-4 bg-gradient-to-r from-[#A78BFA] to-[#C4B5FD] text-white rounded-xl font-semibold text-lg hover:scale-[1.03] hover:shadow-lg transition-all duration-200"
             >
-              Submit Another Request
+              Start Your Personal Reading
+              <ArrowRight className="w-5 h-5" />
             </Button>
           </motion.div>
         </div>
-      </div>
-    )
-  }
+      </section>
 
-  return (
-    <div className="min-h-screen mystical-gradient relative overflow-hidden">
-      <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        <motion.div 
-          className="absolute top-1/4 left-1/4 w-96 h-96 rounded-full bg-primary/5 blur-3xl"
-          animate={{ x: [0, 50, 0], y: [0, -30, 0] }}
-          transition={{ duration: 10, repeat: Infinity }}
-        />
-        <motion.div 
-          className="absolute bottom-0 right-1/4 w-80 h-80 rounded-full bg-purple-400/5 blur-3xl"
-          animate={{ x: [0, -40, 0], y: [0, 40, 0] }}
-          transition={{ duration: 8, repeat: Infinity }}
-        />
-      </div>
+      {/* Trust / Value Section */}
+      <section className="py-16 md:py-20 px-6 bg-[#F9FAFB]">
+        <div className="max-w-5xl mx-auto">
+          <div className="grid md:grid-cols-3 gap-8">
+            {benefits.map((benefit, index) => (
+              <motion.div
+                key={benefit.title}
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: index * 0.1 }}
+                className="p-6 bg-white rounded-2xl shadow-sm hover:shadow-md transition-shadow"
+              >
+                <div className="w-12 h-12 rounded-xl bg-[#A78BFA]/10 flex items-center justify-center mb-4">
+                  <benefit.icon className="w-6 h-6 text-[#A78BFA]" />
+                </div>
+                <h3 className="text-lg font-semibold text-[#111827] mb-2">
+                  {benefit.title}
+                </h3>
+                <p className="text-sm text-[#6B7280] leading-relaxed">
+                  {benefit.description}
+                </p>
+              </motion.div>
+            ))}
+          </div>
+        </div>
+      </section>
 
-      <div className="container relative z-10 py-16 px-4">
-        <div className="max-w-2xl mx-auto">
+      {/* How It Works Section */}
+      <section className="py-16 md:py-20 px-6">
+        <div className="max-w-5xl mx-auto">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
             className="text-center mb-12"
           >
-            <motion.div 
-              className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-gradient-to-br from-primary/20 to-purple-400/20 mb-6"
-              animate={{ scale: [1, 1.1, 1] }}
-              transition={{ duration: 2, repeat: Infinity }}
-            >
-              <Sparkles className="w-8 h-8 text-primary" />
-            </motion.div>
-            <h1 className="text-3xl md:text-4xl font-serif font-bold mb-4">
-              Book Your Personal Reading
-            </h1>
-            <p className="text-lg text-muted-foreground">
-              Let Ginni guide you with clarity and calm
+            <h2 className="text-3xl font-semibold text-[#111827] mb-3">
+              How It Works
+            </h2>
+            <p className="text-[#6B7280]">
+              Three simple steps to clarity
             </p>
           </motion.div>
 
+          <div className="grid md:grid-cols-3 gap-8">
+            {steps.map((step, index) => (
+              <motion.div
+                key={step.step}
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: index * 0.15 }}
+                className="relative p-6 bg-white rounded-2xl border border-gray-100"
+              >
+                <span className="text-5xl font-semibold text-[#A78BFA]/20 absolute top-4 right-6">
+                  {step.step}
+                </span>
+                <h3 className="text-lg font-semibold text-[#111827] mb-2 mt-4">
+                  {step.title}
+                </h3>
+                <p className="text-sm text-[#6B7280]">
+                  {step.description}
+                </p>
+              </motion.div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Emotional / Quote Section */}
+      <section className="py-16 md:py-20 px-6 bg-gradient-to-b from-white to-[#F9FAFB]">
+        <div className="max-w-3xl mx-auto text-center">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.2 }}
-            className="p-8 rounded-3xl bg-card/80 backdrop-blur-sm border border-border/50 glass"
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
           >
-            <form onSubmit={handleSubmit} className="space-y-6">
-              <div className="grid md:grid-cols-2 gap-6">
-                <div className="space-y-2">
-                  <label className="text-sm font-medium text-foreground">
-                    Full Name
-                  </label>
-                  <Input
-                    type="text"
-                    placeholder="Your name"
-                    value={formData.fullName}
-                    onChange={(e) => handleChange('fullName', e.target.value)}
-                    required
-                    className="h-12 px-4 rounded-xl border-border bg-background/50 focus:ring-2 focus:ring-primary/30"
-                  />
-                </div>
-
-                <div className="space-y-2">
-                  <label className="text-sm font-medium text-foreground">
-                    Email
-                  </label>
-                  <Input
-                    type="email"
-                    placeholder="your@email.com"
-                    value={formData.email}
-                    onChange={(e) => handleChange('email', e.target.value)}
-                    required
-                    className="h-12 px-4 rounded-xl border-border bg-background/50 focus:ring-2 focus:ring-primary/30"
-                  />
-                </div>
-              </div>
-
-              <div className="grid md:grid-cols-2 gap-6">
-                <div className="space-y-2">
-                  <label className="text-sm font-medium text-foreground flex items-center gap-2">
-                    <Calendar className="w-4 h-4" />
-                    Preferred Date
-                  </label>
-                  <Input
-                    type="date"
-                    value={formData.preferredDate}
-                    onChange={(e) => handleChange('preferredDate', e.target.value)}
-                    required
-                    className="h-12 px-4 rounded-xl border-border bg-background/50 focus:ring-2 focus:ring-primary/30"
-                  />
-                </div>
-
-                <div className="space-y-2">
-                  <label className="text-sm font-medium text-foreground flex items-center gap-2">
-                    <Clock className="w-4 h-4" />
-                    Preferred Time
-                  </label>
-                  <Input
-                    type="time"
-                    value={formData.preferredTime}
-                    onChange={(e) => handleChange('preferredTime', e.target.value)}
-                    required
-                    className="h-12 px-4 rounded-xl border-border bg-background/50 focus:ring-2 focus:ring-primary/30"
-                  />
-                </div>
-              </div>
-
-              <div className="space-y-2">
-                <label className="text-sm font-medium text-foreground flex items-center gap-2">
-                  <MessageCircle className="w-4 h-4" />
-                  Topic
-                </label>
-                <div className="flex gap-3 flex-wrap">
-                  {topics.map((topic) => (
-                    <button
-                      key={topic.value}
-                      type="button"
-                      onClick={() => handleChange('topic', topic.value)}
-                      className={`px-5 py-2.5 rounded-full text-sm font-medium transition-all ${
-                        formData.topic === topic.value
-                          ? 'bg-primary text-white'
-                          : 'bg-muted/50 text-muted-foreground hover:bg-muted hover:text-foreground'
-                      }`}
-                    >
-                      {topic.label}
-                    </button>
-                  ))}
-                </div>
-              </div>
-
-              <div className="space-y-2">
-                <label className="text-sm font-medium text-foreground">
-                  Message <span className="text-muted-foreground">(optional)</span>
-                </label>
-                <textarea
-                  placeholder="Share any specific questions or topics you'd like to explore..."
-                  value={formData.message}
-                  onChange={(e) => handleChange('message', e.target.value)}
-                  rows={4}
-                  className="w-full px-4 py-3 rounded-xl border border-border bg-background/50 text-foreground resize-none focus:outline-none focus:ring-2 focus:ring-primary/30"
-                />
-              </div>
-
-              <Button 
-                type="submit"
-                disabled={isSubmitting || !formData.fullName || !formData.email || !formData.preferredDate || !formData.preferredTime || !formData.topic}
-                className="w-full h-14 text-lg btn-premium rounded-2xl"
-              >
-                {isSubmitting ? (
-                  <span className="flex items-center gap-2">
-                    <motion.span
-                      className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full"
-                      animate={{ rotate: 360 }}
-                      transition={{ duration: 1, repeat: Infinity, ease: 'linear' }}
-                    />
-                    Sending...
-                  </span>
-                ) : (
-                  <>
-                    Request Booking
-                    <Send className="w-5 h-5 ml-2" />
-                  </>
-                )}
-              </Button>
-            </form>
+            <div className="flex justify-center gap-1 mb-6">
+              {[...Array(5)].map((_, i) => (
+                <Star key={i} className="w-5 h-5 fill-[#A78BFA] text-[#A78BFA]" />
+              ))}
+            </div>
+            <blockquote className="text-2xl md:text-3xl font-medium text-[#111827] leading-relaxed mb-6">
+              "The cards speak to what we need to hear, not always what we want to hear. In that truth, we find our path forward."
+            </blockquote>
+            <p className="text-[#6B7280]">
+              — Ginni, Your Spiritual Companion
+            </p>
           </motion.div>
         </div>
-      </div>
+      </section>
+
+      {/* Final CTA Section */}
+      <section className="py-16 md:py-20 px-6 bg-[#F9FAFB]">
+        <div className="max-w-xl mx-auto text-center">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+          >
+            <h2 className="text-3xl font-semibold text-[#111827] mb-4">
+              Ready for Your Reading?
+            </h2>
+            <p className="text-[#6B7280] mb-8">
+              Connect with Ginni and discover what the universe has to say.
+            </p>
+            <Button 
+              onClick={handleBooking}
+              className="inline-flex items-center gap-2 px-8 py-4 bg-gradient-to-r from-[#A78BFA] to-[#C4B5FD] text-white rounded-xl font-semibold text-lg hover:scale-[1.03] hover:shadow-lg transition-all duration-200"
+            >
+              Start Your Personal Reading
+              <ArrowRight className="w-5 h-5" />
+            </Button>
+          </motion.div>
+        </div>
+      </section>
     </div>
   )
 }

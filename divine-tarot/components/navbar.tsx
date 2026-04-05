@@ -20,17 +20,18 @@ export function Navbar() {
 
   return (
     <header className="sticky top-0 z-50 w-full border-b border-gray-200 bg-white/90 backdrop-blur-md">
-      <nav className="container flex h-16 items-center justify-between px-4 md:px-8">
+      <nav className="container flex h-[200px] items-center justify-between px-4 md:px-8">
         {/* LEFT SECTION - Logo */}
         <div className="flex items-center mr-6">
           <Link href="/" className="flex items-center">
-            <Image
-              src="/logo.png"
-              alt="Divine Tarot"
-              width={120}
-              height={40}
-              className="h-10 w-auto"
-            />
+              <Image
+                src="/logo.png"
+                alt="The Divine Tarot"
+                width={320}
+                height={180}
+                className="w-[180px] h-auto object-contain md:h-[180px] md:w-[320px]"
+                priority
+              />
           </Link>
         </div>
 

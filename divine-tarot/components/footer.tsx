@@ -66,18 +66,20 @@ export function Footer() {
           {/* SECTION 1: Brand */}
           <div className="lg:col-span-1 space-y-5">
             <Link href="/" className="flex items-center gap-2">
-              <Image
-                src="/logo.png"
-                alt="Divine Tarot"
-                width={36}
-                height={36}
-                className="h-9 w-auto"
-              />
+              <div className="h-[80px]">
+                <Image
+                  src="/logo.png"
+                  alt="The Divine Tarot"
+                  width={200}
+                  height={80}
+                  className="h-full w-auto object-contain"
+                />
+              </div>
             </Link>
             <div>
-              <h3 className="text-base font-semibold text-[#1A1A1A]">
+              {/* <h3 className="text-base font-semibold text-[#1A1A1A]">
                 The Divine Tarot
-              </h3>
+              </h3> */}
               <p className="text-xs text-[#666666] mt-2 leading-relaxed">
                 Guiding you with clarity, intuition, and spiritual insight. Talk to Ginni for personalized tarot guidance anytime.
               </p>
@@ -209,12 +211,12 @@ export function Footer() {
               </Link>
               <span className="text-gray-300">|</span>
               <a
-                href="https://sitelytic.com"
+                href="https://sitelytc.com"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="text-sm text-[#888888] hover:text-[#A78BFA] hover:underline transition-colors"
               >
-                Designed & Developed by Sitelytic
+                Designed & Developed by Sitelytc
               </a>
             </div>
           </div>
