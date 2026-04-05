@@ -3,8 +3,8 @@
 import Link from 'next/link'
 import Image from 'next/image'
 import { useState } from 'react'
+import { Sparkles, Check, Loader2 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
-import { Check, Loader2, Sparkles } from 'lucide-react'
 
 export function Footer() {
   const [email, setEmail] = useState('')
@@ -42,7 +42,7 @@ export function Footer() {
     }
   }
 
-  const productLinks = [
+  const navLinks = [
     { name: 'Home', href: '/' },
     { name: 'About', href: '/about' },
     { name: 'Book Personal Reading', href: '/booking' },
@@ -50,57 +50,47 @@ export function Footer() {
 
   const supportLinks = [
     { name: 'FAQ', href: '/faq' },
-    { name: 'Contact', href: '/contact' },
-  ]
-
-  const legalLinks = [
     { name: 'Privacy Policy', href: '/privacy-policy' },
-    { name: 'Terms of Services', href: '/terms' },
+    { name: 'Terms of Service', href: '/terms' },
   ]
 
   return (
-    <footer className="bg-[#FAF9F6] border-t border-[#EAEAEA]">
-      {/* Main Footer Content */}
-      <div className="container px-6 md:px-12 py-16">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-10">
-          {/* SECTION 1: Brand */}
-          <div className="lg:col-span-1 space-y-5">
-            <Link href="/" className="flex items-center gap-2">
-              <div className="h-12 md:h-[80px] w-full max-w-[140px] md:max-w-[200px]">
-                <Image
-                  src="/logo.png"
-                  alt="The Divine Tarot"
-                  width={320}
-                  height={180}
-                  className="h-full w-auto object-contain"
-                />
-              </div>
+    <footer className="bg-[#F9FAFB] border-t border-gray-200">
+      {/* Main Footer */}
+      <div className="max-w-7xl mx-auto px-6 py-16">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10 lg:gap-12">
+          
+          {/* Column 1: Brand */}
+          <div className="space-y-5">
+            <Link href="/" className="inline-block">
+              <Image
+                src="/logo.png"
+                alt="The Divine Tarot"
+                width={200}
+                height={120}
+                className="h-12 w-auto object-contain"
+              />
             </Link>
-            <div>
-              {/* <h3 className="text-base font-semibold text-[#1A1A1A]">
-                The Divine Tarot
-              </h3> */}
-              <p className="text-xs text-[#666666] mt-2 leading-relaxed">
-                Guiding you with clarity, intuition, and spiritual insight. Talk to Ginni for personalized tarot guidance anytime.
-              </p>
-            </div>
+            <p className="text-sm text-gray-600 leading-relaxed">
+              Guiding you toward clarity and peace.
+            </p>
             <p className="text-xs text-[#A78BFA] flex items-center gap-1">
               <Sparkles className="w-3 h-3" />
-              Your intuitive companion
+              Your privacy and energy are always respected.
             </p>
           </div>
 
-          {/* SECTION 2: Product */}
+          {/* Column 2: Navigation */}
           <div className="space-y-4">
-            <h4 className="text-xs font-semibold text-[#1A1A1A] uppercase tracking-wide">
-              Product
+            <h4 className="text-sm font-semibold text-gray-900">
+              Navigation
             </h4>
             <ul role="list" className="space-y-3">
-              {productLinks.map((item) => (
+              {navLinks.map((item) => (
                 <li key={item.name}>
                   <Link
                     href={item.href}
-                    className="text-sm text-[#666666] hover:text-[#A78BFA] transition-colors"
+                    className="text-sm text-gray-600 hover:text-[#A78BFA] transition-colors"
                   >
                     {item.name}
                   </Link>
@@ -109,9 +99,9 @@ export function Footer() {
             </ul>
           </div>
 
-          {/* SECTION 3: Support */}
+          {/* Column 3: Support */}
           <div className="space-y-4">
-            <h4 className="text-xs font-semibold text-[#1A1A1A] uppercase tracking-wide">
+            <h4 className="text-sm font-semibold text-gray-900">
               Support
             </h4>
             <ul role="list" className="space-y-3">
@@ -119,7 +109,7 @@ export function Footer() {
                 <li key={item.name}>
                   <Link
                     href={item.href}
-                    className="text-sm text-[#666666] hover:text-[#A78BFA] transition-colors"
+                    className="text-sm text-gray-600 hover:text-[#A78BFA] transition-colors"
                   >
                     {item.name}
                   </Link>
@@ -128,35 +118,16 @@ export function Footer() {
             </ul>
           </div>
 
-          {/* SECTION 4: Legal */}
+          {/* Column 4: Newsletter */}
           <div className="space-y-4">
-            <h4 className="text-xs font-semibold text-[#1A1A1A] uppercase tracking-wide">
-              Legal
-            </h4>
-            <ul role="list" className="space-y-3">
-              {legalLinks.map((item) => (
-                <li key={item.name}>
-                  <Link
-                    href={item.href}
-                    className="text-sm text-[#666666] hover:text-[#A78BFA] transition-colors"
-                  >
-                    {item.name}
-                  </Link>
-                </li>
-              ))}
-            </ul>
-          </div>
-
-          {/* SECTION 5: Newsletter */}
-          <div className="space-y-4">
-            <h4 className="text-xs font-semibold text-[#1A1A1A] uppercase tracking-wide">
+            <h4 className="text-sm font-semibold text-gray-900">
               Stay Connected
             </h4>
             
             {isSuccess ? (
-              <div className="flex items-center gap-2 text-green-600 bg-green-50 px-4 py-2 rounded-full">
-                <Check className="h-4 w-4" />
-                <span className="text-sm">You're now connected with Ginni 💜</span>
+              <div className="flex items-center gap-2 text-green-600 bg-green-50 px-4 py-2 rounded-full text-sm">
+                <Check className="w-4 h-4" />
+                You're subscribed!
               </div>
             ) : (
               <form onSubmit={handleSubmit} className="space-y-3">
@@ -166,12 +137,12 @@ export function Footer() {
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   required
-                  className="w-full px-4 py-2.5 rounded-lg border border-gray-200 bg-white text-sm focus:outline-none focus:ring-2 focus:ring-[#A78BFA]/30 focus:border-[#A78BFA] transition-all"
+                  className="w-full px-4 py-2.5 rounded-full border border-gray-200 bg-white text-sm focus:outline-none focus:ring-2 focus:ring-[#A78BFA]/30 focus:border-[#A78BFA] transition-all"
                 />
                 <Button 
                   type="submit" 
                   disabled={isLoading}
-                  className="w-full rounded-full bg-gradient-to-r from-[#A78BFA] to-[#8B5CF6] text-white hover:scale-[1.02] transition-transform text-sm py-2"
+                  className="w-full rounded-full bg-gradient-to-r from-[#A78BFA] to-[#C4B5FD] text-white hover:scale-[1.02] transition-transform text-sm py-2"
                 >
                   {isLoading ? (
                     <Loader2 className="h-4 w-4 animate-spin" />
@@ -180,9 +151,6 @@ export function Footer() {
                   )}
                 </Button>
                 {error && <p className="text-xs text-red-500">{error}</p>}
-                <p className="text-xs text-[#666666]">
-                  Get guidance, insights & updates from Ginni 💜
-                </p>
               </form>
             )}
           </div>
@@ -190,33 +158,20 @@ export function Footer() {
       </div>
 
       {/* Bottom Bar */}
-      <div className="border-t border-[#EAEAEA]">
-        <div className="container px-6 md:px-12 py-4">
+      <div className="border-t border-gray-200">
+        <div className="max-w-7xl mx-auto px-6 py-4">
           <div className="flex flex-col sm:flex-row justify-between items-center gap-4">
             <p className="text-xs text-gray-500">
               © {new Date().getFullYear()} The Divine Tarot. All rights reserved.
             </p>
             <div className="flex items-center gap-4 text-xs">
-              <Link
-                href="/privacy-policy"
-                className="text-gray-500 hover:text-[#A78BFA] transition-colors"
-              >
-                Privacy
-              </Link>
-              <Link
-                href="/terms"
-                className="text-gray-500 hover:text-[#A78BFA] transition-colors"
-              >
-                Terms
-              </Link>
-              <span className="text-gray-300">|</span>
               <a
-                href="https://sitelytc.com"
+                href="https://sitelytic.com"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="text-sm text-[#888888] hover:text-[#A78BFA] hover:underline transition-colors"
+                className="text-gray-500 hover:text-[#A78BFA] hover:underline transition-colors"
               >
-                Designed & Developed by Sitelytc
+                Designed & Developed by Sitelytic
               </a>
             </div>
           </div>
