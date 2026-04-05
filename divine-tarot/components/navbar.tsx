@@ -27,9 +27,9 @@ export function Navbar() {
               <Image
                 src="/logo.png"
                 alt="The Divine Tarot"
-                width={240}
-                height={135}
-                className="w-[180px] h-auto object-contain md:h-[180px] md:w-[320px]"
+                width={320}
+                height={180}
+                className="object-contain"
                 priority
               />
           </Link>
