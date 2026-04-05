@@ -66,7 +66,7 @@ export function Navbar() {
             className="hidden sm:flex rounded-full px-6 py-2.5 text-sm font-semibold bg-gradient-to-r from-[#A78BFA] to-[#C4B5FD] text-white shadow-md hover:scale-105 hover:shadow-lg transition-all duration-200"
           >
             <Link href="/contact">
-              Start Reading
+              Contact Us
             </Link>
           </Button>
 
@@ -86,9 +86,9 @@ export function Navbar() {
         </div>
       </nav>
 
-      {/* Mobile Navigation - Full Screen Overlay */}
+      {/* Mobile Navigation */}
       {mobileMenuOpen && (
-        <div className="md:hidden fixed inset-0 top-16 bg-white/95 backdrop-blur-md z-40">
+        <div className="md:hidden border-t bg-white/95 backdrop-blur-md fixed inset-0 top-16">
           <div className="flex flex-col items-center justify-center h-full space-y-8 px-4">
             {navigation.map((item) => (
               <Link
@@ -109,8 +109,8 @@ export function Navbar() {
               asChild 
               className="rounded-full px-8 py-3 text-base font-semibold bg-gradient-to-r from-[#A78BFA] to-[#C4B5FD] text-white shadow-md"
             >
-              <Link href="/booking" onClick={() => setMobileMenuOpen(false)}>
-                Start Reading
+              <Link href="/contact" onClick={() => setMobileMenuOpen(false)}>
+                Contact Us
               </Link>
             </Button>
           </div>
